@@ -33,6 +33,33 @@ namespace Mygame
         void clickCharacter(ICharacterController charctrl);
     }
 
+    //移动控制器
+    public class MoveController:MonoBehaviour
+    {
+        float speed = 20f;
+        Vector3 destination;
+        int status = 0;//0为结束，1为开始
+
+        void Update()
+        {
+            if(status == 1)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+
+                if(Vector3.Distance(transform.position, destination)<0.0001)
+                {
+                    status = 0;
+                }
+            }
+        }
+
+        public void Move(Vector3 dest)
+        {
+            destination = dest;
+            status = 1;
+        }
+    }
+
     //用于河岸控制器的储存结构
     public class CoastStorage
     {
@@ -135,12 +162,39 @@ namespace Mygame
     public class BoatController
     {
         readonly public GameObject boat;
+        readonly MoveController movescript;
+        int boatStatus;//0为从fromCoast开到toCoast，1为开回来
+
+        //两个ICharacter对象
+        ICharacterController frontCharacter;
+        ICharacterController backCharacter;
+
+        //两个相对向量，表示相对于船的两个乘员的位置
+        readonly Vector3 front = new Vector3(0.5f,0.5f,0);
+        readonly Vector3 back = new Vector3(-0.5f, 0.5f, 0);
         public BoatController()
         {
             Debug.Log("boat controller init");
             boat = Object.Instantiate(Resources.Load("Prefabs/boat", typeof(GameObject))) as GameObject;
+            movescript = boat.AddComponent(typeof(MoveController)) as MoveController;
             boat.AddComponent(typeof(UserClick));
+            boatStatus = 0;
         }
+        public void move()
+        {
+            Debug.Log("move");
+            if (boatStatus == 0)
+            {
+                boatStatus = 1;
+                movescript.Move(new Vector3(8, 0, 0));
+            }
+            else
+            {
+                boatStatus = 0;
+                movescript.Move(new Vector3(4, 0, 0));
+            }
+        }
+        
     }
 
     //人物控制器
@@ -149,6 +203,7 @@ namespace Mygame
         readonly public GameObject character;
         readonly public string race;
         readonly UserClick userclick;
+        bool _onBoat;
         public ICharacterController(int index,string racing,Vector3 pos)
         {
             string path = "Prefabs/" + racing;
@@ -156,6 +211,7 @@ namespace Mygame
             character.name = racing + index.ToString();
             character.transform.position = pos;
             race = racing;
+            _onBoat = false;
 
             userclick = character.AddComponent(typeof(UserClick)) as UserClick;
             userclick.setController(this);

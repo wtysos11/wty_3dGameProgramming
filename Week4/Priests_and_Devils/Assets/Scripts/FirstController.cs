@@ -50,7 +50,8 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     }
     public void moveBoat()
     {
-        //Debug.Log("boat");
+        Debug.Log("boat");
+        boat.move();
     }
     public void clickCharacter(ICharacterController charctrl)
     {
