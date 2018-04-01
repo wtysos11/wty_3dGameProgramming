@@ -33,21 +33,118 @@ namespace Mygame
         void clickCharacter(ICharacterController charctrl);
     }
 
+    public class CoastStorage
+    {
+        private ICharacterController[] characterStorage = new ICharacterController[6];
+        public bool isFull()
+        {
+            int counter = 0;
+            for(int i=0;i<6;i++)
+            {
+                if (characterStorage[i] != null)
+                    counter++;
+            }
+            if (counter == 6)
+                return true;
+            else
+                return false;
+        }
+        //返回值是插入的位置
+        public int insert(ICharacterController element)
+        {
+            if (this.isFull())
+                return -1;
+
+            for(int i=0;i<6;i++)
+            {
+                if(characterStorage[i]==null)
+                {
+                    characterStorage[i] = element;
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public ICharacterController getCharacter(int pos)
+        {
+            if (pos < 0 || pos >= 6)
+                return null;
+            else
+            {
+                return characterStorage[pos];
+            }
+        }
+        public bool remove(int pos)
+        {
+            if(characterStorage[pos]!=null)
+            {
+                characterStorage[pos] = null;
+                return true;
+            }
+            else
+                return false;
+        }
+    }
+
+
     //两个岸的控制器，包括开始建立，确认是否结束。响应点击事件
     public class CoastController
     {
+        readonly public GameObject coast;
+        public CoastStorage storage;
 
+        public CoastController(int status,Vector3 pos)
+        {
+            coast = Object.Instantiate(Resources.Load("Prefabs/stone", typeof(GameObject))) as GameObject;
+            coast.name = "from_coast";
+            if (status == 1)
+            {
+                coast.transform.position = pos;
+                coast.name = "to_coast";
+            }
+        }
+
+        bool OnCoast(ICharacterController character)
+        {
+            if (storage.isFull())
+                return false;
+            else
+            {
+                storage.insert(character);
+                return true;
+            }
+        }
+        bool OffCoast(int pos)
+        {
+            bool flag = storage.remove(pos);
+            return flag;
+        }
     }
 
     //船的控制器，包括一个堆栈用于塞人
     public class BoatController
     {
-
+        readonly public GameObject boat; 
+        public BoatController()
+        {
+            boat = Object.Instantiate(Resources.Load("Prefabs/boat", typeof(GameObject))) as GameObject;
+        }
     }
 
     //人物控制器
     public class ICharacterController
     {
+        readonly public GameObject character;
+        readonly public string race;
+        public ICharacterController(int index,string racing,Vector3 pos)
+        {
+            string path = "Prefabs/" + racing;
+            character = Object.Instantiate(Resources.Load(path, typeof(GameObject))) as GameObject;
+            character.name = racing + index.ToString();
+            character.transform.position = pos;
+            race = racing;
+        }
 
     }
 }
