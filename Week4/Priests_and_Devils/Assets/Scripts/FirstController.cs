@@ -15,9 +15,13 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     //坐标管理
     readonly Vector3 from_coast_origin = new Vector3((float)2.5, (float)1.25, 0);
     readonly Vector3 to_coast_origin = new Vector3((float)9.5, (float)1.25, 0);
+
     void Awake()
     {
+        //导演单例模式加载
         SSDirector director = SSDirector.getInstance();
+        director.currentSceneController = this;
+
         this.LoadResources();
     }
 
@@ -46,11 +50,11 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     }
     public void moveBoat()
     {
-
+        //Debug.Log("boat");
     }
     public void clickCharacter(ICharacterController charctrl)
     {
-
+        //Debug.Log(charctrl.character.name);
     }
 
 

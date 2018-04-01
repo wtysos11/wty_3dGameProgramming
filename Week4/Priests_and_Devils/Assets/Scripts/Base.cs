@@ -33,6 +33,7 @@ namespace Mygame
         void clickCharacter(ICharacterController charctrl);
     }
 
+    //用于河岸控制器的储存结构
     public class CoastStorage
     {
         private ICharacterController[] characterStorage = new ICharacterController[6];
@@ -85,6 +86,10 @@ namespace Mygame
             else
                 return false;
         }
+        public void clear()
+        {
+            characterStorage = new ICharacterController[6];
+        }
     }
 
 
@@ -105,7 +110,7 @@ namespace Mygame
             }
         }
 
-        bool OnCoast(ICharacterController character)
+        public bool OnCoast(ICharacterController character)
         {
             if (storage.isFull())
                 return false;
@@ -115,20 +120,26 @@ namespace Mygame
                 return true;
             }
         }
-        bool OffCoast(int pos)
+        public bool OffCoast(int pos)
         {
             bool flag = storage.remove(pos);
             return flag;
+        }
+        public void reset()
+        {
+            storage.clear();
         }
     }
 
     //船的控制器，包括一个堆栈用于塞人
     public class BoatController
     {
-        readonly public GameObject boat; 
+        readonly public GameObject boat;
         public BoatController()
         {
+            Debug.Log("boat controller init");
             boat = Object.Instantiate(Resources.Load("Prefabs/boat", typeof(GameObject))) as GameObject;
+            boat.AddComponent(typeof(UserClick));
         }
     }
 
@@ -137,6 +148,7 @@ namespace Mygame
     {
         readonly public GameObject character;
         readonly public string race;
+        readonly UserClick userclick;
         public ICharacterController(int index,string racing,Vector3 pos)
         {
             string path = "Prefabs/" + racing;
@@ -144,6 +156,9 @@ namespace Mygame
             character.name = racing + index.ToString();
             character.transform.position = pos;
             race = racing;
+
+            userclick = character.AddComponent(typeof(UserClick)) as UserClick;
+            userclick.setController(this);
         }
 
     }
