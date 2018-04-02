@@ -190,7 +190,7 @@ namespace Mygame
                     devil_num++;
                 }
             }
-            Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
+            //Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
             if (devil_num > priest_num && priest_num != 0)
                 return true;
             else
@@ -212,7 +212,7 @@ namespace Mygame
                     devil_num++;
                 }
             }
-            Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
+            //Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
             if (devil_num > priest_num && priest_num != 0)
                 return true;
             else
@@ -290,12 +290,12 @@ namespace Mygame
         //check
         public bool check_over(BoatController boat)
         {
-            Debug.Log(coast.name + " check");
+            //Debug.Log(coast.name + " check");
             return storage.check_over(boat);
         }
         public bool check_over()
         {
-            Debug.Log(coast.name + " check");
+            //Debug.Log(coast.name + " check");
             return storage.check_over();
         }
 
