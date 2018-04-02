@@ -9,6 +9,9 @@ namespace Mygame
     {
         private static SSDirector _instance;
         public ISceneController currentSceneController { get; set; }//导演手中的场景控制器
+                                                                    //坐标管理
+        public readonly Vector3 from_coast_origin = new Vector3((float)2.5, (float)1.25, 0);
+        public readonly Vector3 to_coast_origin = new Vector3((float)9.5, (float)1.25, 0);
 
         public static SSDirector getInstance()
         {
@@ -63,7 +66,12 @@ namespace Mygame
     //用于河岸控制器的储存结构
     public class CoastStorage
     {
-        private ICharacterController[] characterStorage = new ICharacterController[6];
+        public ICharacterController[] characterStorage;
+        public CoastStorage()
+        {
+            characterStorage = new ICharacterController[6];
+        }
+
         public bool isFull()
         {
             int counter = 0;
@@ -79,7 +87,19 @@ namespace Mygame
         }
         //返回值是插入的位置
         public int insert(ICharacterController element)
-        {
+        {/*
+            Debug.Log("class storage in function insert");
+            Debug.Log("output all element");
+            for(int i=0;i<6;i++)
+            {
+                if (characterStorage[i] == null)
+                    Debug.Log("null");
+                else
+                {
+                    Debug.Log(element.character.name);
+                }
+            }*/
+
             if (this.isFull())
                 return -1;
 
@@ -113,6 +133,20 @@ namespace Mygame
             else
                 return false;
         }
+        public void delete(ICharacterController character)
+        {
+            //Debug.Log("class CoastStorage in function delete with parameter:" + character.ToString());
+            for(int i=0;i<6;i++)
+            {
+                if (characterStorage[i] == null)
+                    continue;
+                else if(characterStorage[i] == character)
+                {
+                    characterStorage[i] = null;
+                    return;
+                }
+            }
+        }
         public void clear()
         {
             characterStorage = new ICharacterController[6];
@@ -130,6 +164,7 @@ namespace Mygame
         {
             coast = Object.Instantiate(Resources.Load("Prefabs/stone", typeof(GameObject))) as GameObject;
             coast.name = "from_coast";
+            storage = new CoastStorage();
             if (status == 1)
             {
                 coast.transform.position = pos;
@@ -137,20 +172,47 @@ namespace Mygame
             }
         }
 
-        public bool OnCoast(ICharacterController character)
+        public void initStorage(ICharacterController[] characters)
+        {
+            for(int i=0;i<6;i++)
+            {
+                //Debug.Log("in function initStorage:" + characters[i].character.name);
+                storage.insert(characters[i]);
+            }
+        }
+
+        public int OnCoast(ICharacterController character,int boatStatus)
         {
             if (storage.isFull())
-                return false;
+                return -1;
             else
             {
-                storage.insert(character);
-                return true;
+                int pos=storage.insert(character);
+                //Debug.Log("Oncoast with position " + pos.ToString());
+                Vector3 relativeVec;
+                if(coast.name=="from_coast")
+                {
+                    relativeVec = new Vector3(2.5f - pos, 1.25f, 0);
+                }
+                else
+                {
+                    relativeVec = new Vector3(-2.5f + pos, 1.25f, 0);
+                }
+                character.moveOffBoat(coast.transform.position,boatStatus,relativeVec);
+                return pos;
             }
         }
         public bool OffCoast(int pos)
         {
+            //Debug.Log("In function OffCoast with parameter:" + pos.ToString());
             bool flag = storage.remove(pos);
             return flag;
+        }
+        public void OffCoast(ICharacterController Mycharacter)
+        {
+            //Debug.Log("In function OffCoast 2 with parameter:" + Mycharacter.character.ToString());
+            //Debug.Log("check storage:" + (storage == null));
+            storage.delete(Mycharacter);
         }
         public void reset()
         {
@@ -163,7 +225,7 @@ namespace Mygame
     {
         readonly public GameObject boat;
         readonly MoveController movescript;
-        int boatStatus;//0为从fromCoast开到toCoast，1为开回来
+        public int boatStatus;//0为从fromCoast开到toCoast，1为开回来
 
         //两个ICharacter对象
         ICharacterController frontCharacter;
@@ -174,15 +236,18 @@ namespace Mygame
         readonly Vector3 back = new Vector3(-0.5f, 0.5f, 0);
         public BoatController()
         {
-            Debug.Log("boat controller init");
+            //Debug.Log("boat controller init");
             boat = Object.Instantiate(Resources.Load("Prefabs/boat", typeof(GameObject))) as GameObject;
+            boat.name = "boat";
             movescript = boat.AddComponent(typeof(MoveController)) as MoveController;
             boat.AddComponent(typeof(UserClick));
             boatStatus = 0;
+            frontCharacter = null;
+            backCharacter = null;
         }
         public void move()
         {
-            Debug.Log("move");
+            //Debug.Log("move");
             if (boatStatus == 0)
             {
                 boatStatus = 1;
@@ -194,6 +259,73 @@ namespace Mygame
                 movescript.Move(new Vector3(4, 0, 0));
             }
         }
+        public bool boatFull()
+        {
+            if (frontCharacter != null && backCharacter != null)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        //OnBoat和OffBoat，负责操控船的数据结构，同时负责管理移动
+        public void OnBoat(ICharacterController element)
+        {
+            if(this.boatFull())
+            {
+                return;
+            }
+
+            if (boatStatus == 0)//从from向to，front为前
+            {
+                if (frontCharacter == null)
+                {
+                    //Debug.Log("from->to:front element in boat");
+                    frontCharacter = element;
+                    element.character.transform.parent = boat.transform;
+                    element.moveOnBoat(boat.transform.position, boatStatus, front);
+                }
+                else
+                {
+                    //Debug.Log("from->to:back element in boat");
+                    backCharacter = element;
+                    element.character.transform.parent = boat.transform;
+                    element.moveOnBoat(boat.transform.position, boatStatus, back);
+                }
+            }
+            else // 从to开向from，back为前
+            {
+                if (backCharacter == null)
+                {
+                    //Debug.Log("to->from:back element in boat");
+                    backCharacter = element;
+                    element.character.transform.parent = boat.transform;
+                    element.moveOnBoat(boat.transform.position, boatStatus, back);
+                }
+                else
+                {
+                    //Debug.Log("to->from:front element in boat");
+                    frontCharacter = element;
+                    element.character.transform.parent = boat.transform;
+                    element.moveOnBoat(boat.transform.position, boatStatus, front);
+                }
+            }
+        }
+
+        //下船需要对岸支持
+        public void OffBoat(ICharacterController element)
+        {
+            element.character.transform.parent = null;
+            if(frontCharacter == element)
+            {
+                frontCharacter = null;
+            }
+            else
+            {
+                backCharacter = null;
+            }
+        }
         
     }
 
@@ -203,7 +335,13 @@ namespace Mygame
         readonly public GameObject character;
         readonly public string race;
         readonly UserClick userclick;
-        bool _onBoat;
+        readonly MoveController movescript;
+        public bool onBoat;
+
+        readonly Vector3 frontmiddle1 = new Vector3(3.5f, 1.25f, 0);
+        readonly Vector3 frontmiddle2 = new Vector3(3.5f, 0.5f, 0);
+        readonly Vector3 backmiddle1 = new Vector3(8.5f, 1.25f, 0);
+        readonly Vector3 backmiddle2 = new Vector3(8.5f, 0.5f, 0);
         public ICharacterController(int index,string racing,Vector3 pos)
         {
             string path = "Prefabs/" + racing;
@@ -211,11 +349,47 @@ namespace Mygame
             character.name = racing + index.ToString();
             character.transform.position = pos;
             race = racing;
-            _onBoat = false;
+            onBoat = false;
+
+            movescript = character.AddComponent(typeof(MoveController)) as MoveController;
 
             userclick = character.AddComponent(typeof(UserClick)) as UserClick;
             userclick.setController(this);
         }
+        //上船的动作，不进行检查
+        public void moveOnBoat(Vector3 pos,int boatStatus,Vector3 relativeMove)//type为在船前或船后
+        {
+            //Debug.Log("moveOnBoat");
+            onBoat = true;
+            if(boatStatus == 0)
+            {
+                movescript.Move(frontmiddle1);
+                movescript.Move(frontmiddle2);
+            }
+            else
+            {
+                movescript.Move(backmiddle1);
+                movescript.Move(backmiddle2);
+            }
+            movescript.Move(pos + relativeMove);
 
+
+        }
+        public void moveOffBoat(Vector3 pos, int boatStatus, Vector3 relativeMove)//type为在船前或船后
+        {
+            //Debug.Log("moveOffBoat");
+            onBoat = false;
+            if(boatStatus == 0)
+            {
+                movescript.Move(frontmiddle2);
+                movescript.Move(frontmiddle1);
+            }
+            else
+            {
+                movescript.Move(backmiddle2);
+                movescript.Move(backmiddle1);
+            }
+            movescript.Move(pos+relativeMove);
+        }
     }
 }

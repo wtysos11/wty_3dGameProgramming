@@ -12,10 +12,6 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     public BoatController boat;
     public ICharacterController[] characters;
     
-    //坐标管理
-    readonly Vector3 from_coast_origin = new Vector3((float)2.5, (float)1.25, 0);
-    readonly Vector3 to_coast_origin = new Vector3((float)9.5, (float)1.25, 0);
-
     void Awake()
     {
         //导演单例模式加载
@@ -41,6 +37,13 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         {
             characters[i] = new ICharacterController(i, "devil", new Vector3((float)2.5 - i, (float)1.25, 0));
         }
+        fromCoast.initStorage(characters);
+        /*
+        Debug.Log("check whether:" + (fromCoast.storage.characterStorage[0] == fromCoast.storage.characterStorage[1]));
+        for(int i=0;i<6;i++)
+        {
+            Debug.Log(fromCoast.storage.characterStorage[i].character.name);
+        }*/
     }
 
 
@@ -50,12 +53,39 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     }
     public void moveBoat()
     {
-        Debug.Log("boat");
+        //Debug.Log("boat");
         boat.move();
     }
     public void clickCharacter(ICharacterController charctrl)
     {
         //Debug.Log(charctrl.character.name);
+        CoastController whichCoast;
+        if (boat.boatStatus == 0)
+        {
+            whichCoast = fromCoast;
+        }
+        else
+        {
+            whichCoast = toCoast;
+        }
+        //Debug.Log("check coastcontroller " + whichCoast.coast.name);
+        //Debug.Log("check boatcontroller " + boat.boat.name);
+
+        //检查是否合法
+
+        //备注：上船与下船不对称，上船时船负责提供运动终点，下船时岸负责提供运动终点
+        if (charctrl.onBoat == false)//上船的过程
+        {
+           // Debug.Log("function clickCharacter ready to go on boat with parameter:" + charctrl.character.name);
+            whichCoast.OffCoast(charctrl);//离岸
+            boat.OnBoat(charctrl);
+        }
+        else
+        {
+           // Debug.Log("function clickCharacter ready to go off boat with parameter:" + charctrl.character.name);
+            whichCoast.OnCoast(charctrl,boat.boatStatus);//下船上岸
+            boat.OffBoat(charctrl);
+        }
     }
 
 
