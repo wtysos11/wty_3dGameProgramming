@@ -152,7 +152,7 @@ namespace Mygame
             characterStorage = new ICharacterController[6];
         }
 
-        public bool check_over()
+        public bool check_over(BoatController boat)
         {
             int priest_num = 0, devil_num = 0;
             for(int i = 0;i<characterStorage.Length;i++)
@@ -168,7 +168,52 @@ namespace Mygame
                     devil_num++;
                 }
             }
-            if (devil_num > priest_num)
+            if(boat.frontCharacter!=null)
+            {
+                if(boat.frontCharacter.race == "priest")
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            if(boat.backCharacter!=null)
+            {
+                if (boat.backCharacter.race == "priest")
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
+            if (devil_num > priest_num && priest_num != 0)
+                return true;
+            else
+                return false;
+        }
+        public bool check_over()
+        {
+            int priest_num = 0, devil_num = 0;
+            for (int i = 0; i < characterStorage.Length; i++)
+            {
+                if (characterStorage[i] == null)
+                    continue;
+                else if (characterStorage[i].race == "priest")
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            Debug.Log("Coast check with " + priest_num + " priests and " + devil_num + " devils");
+            if (devil_num > priest_num && priest_num != 0)
                 return true;
             else
                 return false;
@@ -196,6 +241,7 @@ namespace Mygame
 
         public void initStorage(ICharacterController[] characters)
         {
+            storage.clear();
             for(int i=0;i<6;i++)
             {
                 //Debug.Log("in function initStorage:" + characters[i].character.name);
@@ -242,8 +288,14 @@ namespace Mygame
         }
 
         //check
+        public bool check_over(BoatController boat)
+        {
+            Debug.Log(coast.name + " check");
+            return storage.check_over(boat);
+        }
         public bool check_over()
         {
+            Debug.Log(coast.name + " check");
             return storage.check_over();
         }
 
@@ -261,8 +313,8 @@ namespace Mygame
         public int boatStatus;//0为从fromCoast开到toCoast，1为开回来
 
         //两个ICharacter对象
-        ICharacterController frontCharacter;
-        ICharacterController backCharacter;
+        public ICharacterController frontCharacter;
+        public ICharacterController backCharacter;
 
         //两个相对向量，表示相对于船的两个乘员的位置
         readonly Vector3 front = new Vector3(0.5f,0.5f,0);
@@ -281,6 +333,9 @@ namespace Mygame
         public void move()
         {
             //Debug.Log("move");
+            if (frontCharacter == null && backCharacter == null)
+                return;
+
             if (boatStatus == 0)
             {
                 boatStatus = 1;
@@ -359,6 +414,14 @@ namespace Mygame
                 backCharacter = null;
             }
         }
+
+        public void reset()
+        {
+            boatStatus = 0;
+            movescript.Move(new Vector3(4, 0, 0));
+            frontCharacter = null;
+            backCharacter = null;
+        }
         
     }
 
@@ -423,6 +486,11 @@ namespace Mygame
                 movescript.Move(backmiddle1);
             }
             movescript.Move(pos+relativeMove);
+        }
+        public void reset()
+        {
+            onBoat = false;
+            character.transform.parent = null;
         }
     }
 }

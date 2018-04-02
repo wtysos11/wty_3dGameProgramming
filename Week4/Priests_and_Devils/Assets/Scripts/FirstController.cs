@@ -50,6 +50,14 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     public void restart()
     {
         fromCoast.reset();
+        toCoast.reset();
+        boat.reset();
+        for(int i=0;i<6;i++)
+        {
+            characters[i].reset();
+            fromCoast.OnCoast(characters[i], 0);
+        }
+        
     }
     public void moveBoat()
     {
@@ -102,9 +110,22 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     //gameover时返回-1,胜利时返回1
     public int checkGameOver()
     {
-        if(fromCoast.check_over()||toCoast.check_over())
+        Debug.Log("check for game over");
+
+        if(boat.boatStatus == 0)
         {
-            return -1;
+            if(fromCoast.check_over(boat)||toCoast.check_over())
+            {
+                return -1;
+            }
+        }
+        else
+        {
+            Debug.Log("to coast check");
+            if(fromCoast.check_over()||toCoast.check_over(boat))
+            {
+                return -1;
+            }
         }
 
         if(toCoast.check_win())

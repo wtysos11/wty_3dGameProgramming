@@ -21,7 +21,7 @@ public class UserInterface : MonoBehaviour {
 
     private void OnGUI()
     {
-        Debug.Log("function OnGUI with status:" + status);
+        //Debug.Log("function OnGUI with status:" + status);
         if(status == 1)
         {
             GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 85, 100, 50), "Gameover!", style);
