@@ -91,6 +91,8 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         }
         if (userInterface.status != 0)
             return;
+        if (boat.boatFull()&&charctrl.onBoat == false)
+            return;
 
         //Debug.Log(charctrl.character.name);
         CoastController whichCoast;
