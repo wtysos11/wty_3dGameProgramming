@@ -61,11 +61,37 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     }
     public void moveBoat()
     {
+        if (userInterface.status != 0)
+            return;
+
         //Debug.Log("boat");
         boat.move();
+        if(boat.boatStatus == 0)//需要检查船移动是否造成游戏结束
+        {
+            if(fromCoast.check_over(boat) || toCoast.check_over())
+            {
+                userInterface.status = 1;
+            }
+        }
+        else
+        {
+            if(fromCoast.check_over()|| toCoast.check_over(boat))
+            {
+                userInterface.status = 1;
+            }
+
+        }
     }
     public void clickCharacter(ICharacterController charctrl)
     {
+        //legal check
+        if((charctrl.place == "from" && boat.boatStatus == 1) || (charctrl.place == "to" && boat.boatStatus == 0))
+        {
+            return;
+        }
+        if (userInterface.status != 0)
+            return;
+
         //Debug.Log(charctrl.character.name);
         CoastController whichCoast;
         if (boat.boatStatus == 0)

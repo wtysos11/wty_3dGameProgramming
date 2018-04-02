@@ -433,6 +433,7 @@ namespace Mygame
         readonly UserClick userclick;
         readonly MoveController movescript;
         public bool onBoat;
+        public string place;
 
         readonly Vector3 frontmiddle1 = new Vector3(3.5f, 1.25f, 0);
         readonly Vector3 frontmiddle2 = new Vector3(3.5f, 0.5f, 0);
@@ -446,6 +447,7 @@ namespace Mygame
             character.transform.position = pos;
             race = racing;
             onBoat = false;
+            place = "from";
 
             movescript = character.AddComponent(typeof(MoveController)) as MoveController;
 
@@ -455,6 +457,7 @@ namespace Mygame
         //上船的动作，不进行检查
         public void moveOnBoat(Vector3 pos,int boatStatus,Vector3 relativeMove)//type为在船前或船后
         {
+            place = "boat";
             //Debug.Log("moveOnBoat");
             onBoat = true;
             if(boatStatus == 0)
@@ -479,11 +482,13 @@ namespace Mygame
             {
                 movescript.Move(frontmiddle2);
                 movescript.Move(frontmiddle1);
+                place = "from";
             }
             else
             {
                 movescript.Move(backmiddle2);
                 movescript.Move(backmiddle1);
+                place = "to";
             }
             movescript.Move(pos+relativeMove);
         }
@@ -491,6 +496,7 @@ namespace Mygame
         {
             onBoat = false;
             character.transform.parent = null;
+            place = "from";
         }
     }
 }

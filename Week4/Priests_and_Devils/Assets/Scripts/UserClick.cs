@@ -18,8 +18,10 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
 
     private void OnMouseDown()
     {
+
+
         //Debug.Log("onmousedown!");
-        if(characterController==null)
+        if (characterController==null)
         {
             action.moveBoat();
         }
