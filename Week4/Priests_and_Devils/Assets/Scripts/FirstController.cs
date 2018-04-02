@@ -17,7 +17,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         //导演单例模式加载
         SSDirector director = SSDirector.getInstance();
         director.currentSceneController = this;
-
+        userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
         this.LoadResources();
     }
 
@@ -49,7 +49,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
 
     public void restart()
     {
-
+        fromCoast.reset();
     }
     public void moveBoat()
     {
@@ -86,6 +86,33 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             whichCoast.OnCoast(charctrl,boat.boatStatus);//下船上岸
             boat.OffBoat(charctrl);
         }
+        
+        int flag = checkGameOver();
+        Debug.Log("check game over:" + flag);
+        if(flag == 1)
+        {
+            userInterface.status = 2;
+        }
+        else if(flag == -1)
+        {
+            userInterface.status = 1;
+        }
+    }
+
+    //gameover时返回-1,胜利时返回1
+    public int checkGameOver()
+    {
+        if(fromCoast.check_over()||toCoast.check_over())
+        {
+            return -1;
+        }
+
+        if(toCoast.check_win())
+        {
+            return 1;
+        }
+
+        return 0;
     }
 
 

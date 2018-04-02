@@ -151,6 +151,28 @@ namespace Mygame
         {
             characterStorage = new ICharacterController[6];
         }
+
+        public bool check_over()
+        {
+            int priest_num = 0, devil_num = 0;
+            for(int i = 0;i<characterStorage.Length;i++)
+            {
+                if (characterStorage[i] == null)
+                    continue;
+                else if(characterStorage[i].race == "priest")
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            if (devil_num > priest_num)
+                return true;
+            else
+                return false;
+        }
     }
 
 
@@ -217,6 +239,17 @@ namespace Mygame
         public void reset()
         {
             storage.clear();
+        }
+
+        //check
+        public bool check_over()
+        {
+            return storage.check_over();
+        }
+
+        public bool check_win()
+        {
+            return storage.isFull();
         }
     }
 
