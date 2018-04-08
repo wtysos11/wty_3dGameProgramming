@@ -1,0 +1,15 @@
+主要的思路：
+基础动作类： SSAction
+从基础动作类继承下来的两个子类
+    简单直线动作类 CCMoveToAction
+    复杂折线动作类 CCSequenceAction
+
+动作类型 SSActionEventType
+
+接口类型 完成通知 ActionDone
+
+动作管理基类：SSActionManager
+    负责管理动作，执行列表并删除已经执行完毕的动作
+
+具体的动作管理类： CCActionManager -> 一般通过getComponent来实现
+参考：https://github.com/csr632/Priests-and-devils/tree/Improvement2
