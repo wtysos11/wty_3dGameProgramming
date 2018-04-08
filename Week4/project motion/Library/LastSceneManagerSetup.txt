@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/projection motion.unity
+  isLoaded: 1
+  isActive: 1
