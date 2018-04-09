@@ -20,7 +20,6 @@ public class FirstController : MonoBehaviour, ISceneController
         director.currentSceneController = this;
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
         actionManager = gameObject.AddComponent<FirstSceneActionManager>() as FirstSceneActionManager;
-        Debug.Log(actionManager == null);
         this.LoadResources();
     }
 
@@ -60,7 +59,7 @@ public class FirstController : MonoBehaviour, ISceneController
             characters[i].reset();
             fromCoast.OnCoast(characters[i], 0);
         }
-        
+        actionManager.reset();
     }
     /*
     public void moveBoat()
@@ -118,50 +117,26 @@ public class FirstController : MonoBehaviour, ISceneController
         }
     }
 
-    public void clickCharacter(ICharacterController charctrl)
+    public bool isCharacterMove(ICharacterController charctrl)
     {
-        //legal check
-        if((charctrl.place == "from" && boat.boatStatus == 1) || (charctrl.place == "to" && boat.boatStatus == 0))
+        if ((charctrl.place == "from" && boat.boatStatus == 1) || (charctrl.place == "to" && boat.boatStatus == 0))
         {
-            return;
+            return false;
         }
         if (userInterface.status != 0)
-            return;
-        if (boat.boatFull()&&charctrl.onBoat == false)
-            return;
+            return false;
+        if (boat.boatFull() && charctrl.onBoat == false)
+            return false;
 
-        //Debug.Log(charctrl.character.name);
-        CoastController whichCoast;
-        if (boat.boatStatus == 0)
-        {
-            whichCoast = fromCoast;
-        }
-        else
-        {
-            whichCoast = toCoast;
-        }
-        //Debug.Log("check coastcontroller " + whichCoast.coast.name);
-        //Debug.Log("check boatcontroller " + boat.boat.name);
-
-        //检查是否合法
-
-        //备注：上船与下船不对称，上船时船负责提供运动终点，下船时岸负责提供运动终点
-        if (charctrl.onBoat == false)//上船的过程
-        {
-           // Debug.Log("function clickCharacter ready to go on boat with parameter:" + charctrl.character.name);
-            whichCoast.OffCoast(charctrl);//离岸
-            boat.OnBoat(charctrl);
-        }
-        else
-        {
-           // Debug.Log("function clickCharacter ready to go off boat with parameter:" + charctrl.character.name);
-            whichCoast.OnCoast(charctrl,boat.boatStatus);//下船上岸
-            boat.OffBoat(charctrl);
-        }
-
-        this.checkGameover();
+        return true;
     }
 
-    //gameover时返回-1,胜利时返回1
+    public CoastController getCharacterCoast()
+    {
+        if (boat.boatStatus == 0)
+            return fromCoast;
+        else
+            return toCoast;
+    }
 
 }

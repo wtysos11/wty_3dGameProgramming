@@ -9,7 +9,7 @@ public class UserInterface : MonoBehaviour {
     GUIStyle buttonStyle;
     private void Start()
     {
-        FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+        this.firstController = Director.getInstance().currentSceneController as FirstController;
 
         style = new GUIStyle();
         style.fontSize = 40;

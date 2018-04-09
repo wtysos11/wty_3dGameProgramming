@@ -19,7 +19,8 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
 
     private void OnMouseDown()
     {
-
+        if (actionManager.canClick == false)
+            return;
 
         //Debug.Log("onmousedown!");
         if (characterController==null)
@@ -28,8 +29,7 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
         }
         else
         {
-            FirstController firstController = Director.getInstance().currentSceneController as FirstController;
-            firstController.clickCharacter(characterController);
+            actionManager.clickCharacter(characterController);
         }
     }
 }

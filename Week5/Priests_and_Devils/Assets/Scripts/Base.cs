@@ -22,7 +22,7 @@ namespace Mygame
             return _instance;
         }
     }
-
+    
     //场记接口，实现由FirstController中进行
     public interface ISceneController
     {
@@ -105,6 +105,22 @@ namespace Mygame
                     return i;
                 }
             }
+            return -1;
+        }
+
+        public int getEmpty()
+        {
+            if (this.isFull())
+                return -1;
+
+            for(int i=0;i<6;i++)
+            {
+                if(characterStorage[i]==null)
+                {
+                    return i;
+                }
+            }
+
             return -1;
         }
 
@@ -243,6 +259,26 @@ namespace Mygame
             }
         }
 
+        public Vector3 getCharPosition()
+        {
+            int pos = storage.getEmpty();
+            if (pos == -1)
+                throw new System.Exception("Can't store any!");
+
+            Vector3 aim = coast.transform.position;
+            Vector3 relativeVec;
+            if (coast.name == "from_coast")
+            {
+                relativeVec = new Vector3(2.5f - pos, 1.25f, 0);
+            }
+            else
+            {
+                relativeVec = new Vector3(-2.5f + pos, 1.25f, 0);
+            }
+            aim = aim + relativeVec;
+            return aim;
+        }
+
         public int OnCoast(ICharacterController character,int boatStatus)
         {
             if (storage.isFull())
@@ -296,6 +332,11 @@ namespace Mygame
         public bool check_win()
         {
             return storage.isFull();
+        }
+
+        public int getEmpty()
+        {
+            return storage.getEmpty();
         }
     }
 
@@ -373,6 +414,14 @@ namespace Mygame
                 return false;
         }
 
+        public void switchBoatStatus()
+        {
+            if (boatStatus == 0)
+                boatStatus = 1;
+            else
+                boatStatus = 0;
+        }
+
         //OnBoat和OffBoat，负责操控船的数据结构，同时负责管理移动
         public void OnBoat(ICharacterController element)
         {
@@ -387,14 +436,14 @@ namespace Mygame
                 {
                     //Debug.Log("from->to:front element in boat");
                     frontCharacter = element;
-                    element.character.transform.parent = boat.transform;
+                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, front);
                 }
                 else
                 {
                     //Debug.Log("from->to:back element in boat");
                     backCharacter = element;
-                    element.character.transform.parent = boat.transform;
+                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, back);
                 }
             }
@@ -404,14 +453,14 @@ namespace Mygame
                 {
                     //Debug.Log("to->from:back element in boat");
                     backCharacter = element;
-                    element.character.transform.parent = boat.transform;
+                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, back);
                 }
                 else
                 {
                     //Debug.Log("to->from:front element in boat");
                     frontCharacter = element;
-                    element.character.transform.parent = boat.transform;
+                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, front);
                 }
             }
@@ -434,7 +483,6 @@ namespace Mygame
         public void reset()
         {
             boatStatus = 0;
-            movescript.Move(new Vector3(4, 0, 0));
             frontCharacter = null;
             backCharacter = null;
         }
@@ -451,10 +499,7 @@ namespace Mygame
         public bool onBoat;
         public string place;
 
-        readonly Vector3 frontmiddle1 = new Vector3(3.5f, 1.25f, 0);
-        readonly Vector3 frontmiddle2 = new Vector3(3.5f, 0.5f, 0);
-        readonly Vector3 backmiddle1 = new Vector3(8.5f, 1.25f, 0);
-        readonly Vector3 backmiddle2 = new Vector3(8.5f, 0.5f, 0);
+
         public ICharacterController(int index,string racing,Vector3 pos)
         {
             string path = "Prefabs/" + racing;
@@ -478,15 +523,15 @@ namespace Mygame
             onBoat = true;
             if(boatStatus == 0)
             {
-                movescript.Move(frontmiddle1);
-                movescript.Move(frontmiddle2);
+                //movescript.Move(frontmiddle1);
+                //movescript.Move(frontmiddle2);
             }
             else
             {
-                movescript.Move(backmiddle1);
-                movescript.Move(backmiddle2);
+                //movescript.Move(backmiddle1);
+                //movescript.Move(backmiddle2);
             }
-            movescript.Move(pos + relativeMove);
+            //movescript.Move(pos + relativeMove);
 
 
         }
@@ -496,17 +541,17 @@ namespace Mygame
             onBoat = false;
             if(boatStatus == 0)
             {
-                movescript.Move(frontmiddle2);
-                movescript.Move(frontmiddle1);
+                //movescript.Move(frontmiddle2);
+                //movescript.Move(frontmiddle1);
                 place = "from";
             }
             else
             {
-                movescript.Move(backmiddle2);
-                movescript.Move(backmiddle1);
+                //movescript.Move(backmiddle2);
+                //movescript.Move(backmiddle1);
                 place = "to";
             }
-            movescript.Move(pos+relativeMove);
+            //movescript.Move(pos+relativeMove);
         }
         public void reset()
         {
