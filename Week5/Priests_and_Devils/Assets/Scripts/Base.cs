@@ -30,33 +30,6 @@ namespace Mygame
     }
     //用户界面与游戏模型的交互接口
 
-    //移动控制器
-    public class MoveController:MonoBehaviour
-    {
-        float speed = 20f;
-        Vector3 destination;
-        int status = 0;//0为结束，1为开始
-
-        void Update()
-        {
-            if(status == 1)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
-
-                if(Vector3.Distance(transform.position, destination)<0.0001)
-                {
-                    status = 0;
-                }
-            }
-        }
-
-        public void Move(Vector3 dest)
-        {
-            destination = dest;
-            status = 1;
-        }
-    }
-
     //用于河岸控制器的储存结构
     public class CoastStorage
     {
@@ -81,18 +54,7 @@ namespace Mygame
         }
         //返回值是插入的位置
         public int insert(ICharacterController element)
-        {/*
-            Debug.Log("class storage in function insert");
-            Debug.Log("output all element");
-            for(int i=0;i<6;i++)
-            {
-                if (characterStorage[i] == null)
-                    Debug.Log("null");
-                else
-                {
-                    Debug.Log(element.character.name);
-                }
-            }*/
+        {
 
             if (this.isFull())
                 return -1;
@@ -254,7 +216,6 @@ namespace Mygame
             storage.clear();
             for(int i=0;i<6;i++)
             {
-                //Debug.Log("in function initStorage:" + characters[i].character.name);
                 storage.insert(characters[i]);
             }
         }
@@ -286,7 +247,6 @@ namespace Mygame
             else
             {
                 int pos=storage.insert(character);
-                //Debug.Log("Oncoast with position " + pos.ToString());
                 Vector3 relativeVec;
                 if(coast.name=="from_coast")
                 {
@@ -302,14 +262,11 @@ namespace Mygame
         }
         public bool OffCoast(int pos)
         {
-            //Debug.Log("In function OffCoast with parameter:" + pos.ToString());
             bool flag = storage.remove(pos);
             return flag;
         }
         public void OffCoast(ICharacterController Mycharacter)
         {
-            //Debug.Log("In function OffCoast 2 with parameter:" + Mycharacter.character.ToString());
-            //Debug.Log("check storage:" + (storage == null));
             storage.delete(Mycharacter);
         }
         public void reset()
@@ -344,7 +301,6 @@ namespace Mygame
     public class BoatController
     {
         readonly public GameObject boat;
-        readonly MoveController movescript;
         public int boatStatus;//0为从fromCoast开到toCoast，1为开回来
 
         //两个ICharacter对象
@@ -359,30 +315,12 @@ namespace Mygame
             //Debug.Log("boat controller init");
             boat = Object.Instantiate(Resources.Load("Prefabs/boat", typeof(GameObject))) as GameObject;
             boat.name = "boat";
-            movescript = boat.AddComponent(typeof(MoveController)) as MoveController;
             boat.AddComponent(typeof(UserClick));
             boatStatus = 0;
             frontCharacter = null;
             backCharacter = null;
         }
-        /*
-        public void move()
-        {
-            //Debug.Log("move");
-            if (frontCharacter == null && backCharacter == null)
-                return;
 
-            if (boatStatus == 0)
-            {
-                boatStatus = 1;
-                movescript.Move(new Vector3(8, 0, 0));
-            }
-            else
-            {
-                boatStatus = 0;
-                movescript.Move(new Vector3(4, 0, 0));
-            }
-        }*/
 
         public Vector3 getDestination()
         {
@@ -434,16 +372,12 @@ namespace Mygame
             {
                 if (frontCharacter == null)
                 {
-                    //Debug.Log("from->to:front element in boat");
                     frontCharacter = element;
-                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, front);
                 }
                 else
                 {
-                    //Debug.Log("from->to:back element in boat");
                     backCharacter = element;
-                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, back);
                 }
             }
@@ -451,16 +385,12 @@ namespace Mygame
             {
                 if (backCharacter == null)
                 {
-                    //Debug.Log("to->from:back element in boat");
                     backCharacter = element;
-                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, back);
                 }
                 else
                 {
-                    //Debug.Log("to->from:front element in boat");
                     frontCharacter = element;
-                    //element.character.transform.parent = boat.transform;
                     element.moveOnBoat(boat.transform.position, boatStatus, front);
                 }
             }
@@ -495,7 +425,6 @@ namespace Mygame
         readonly public GameObject character;
         readonly public string race;
         readonly UserClick userclick;
-        readonly MoveController movescript;
         public bool onBoat;
         public string place;
 
@@ -510,8 +439,7 @@ namespace Mygame
             onBoat = false;
             place = "from";
 
-            movescript = character.AddComponent(typeof(MoveController)) as MoveController;
-
+           
             userclick = character.AddComponent(typeof(UserClick)) as UserClick;
             userclick.setController(this);
         }
@@ -521,19 +449,6 @@ namespace Mygame
             place = "boat";
             //Debug.Log("moveOnBoat");
             onBoat = true;
-            if(boatStatus == 0)
-            {
-                //movescript.Move(frontmiddle1);
-                //movescript.Move(frontmiddle2);
-            }
-            else
-            {
-                //movescript.Move(backmiddle1);
-                //movescript.Move(backmiddle2);
-            }
-            //movescript.Move(pos + relativeMove);
-
-
         }
         public void moveOffBoat(Vector3 pos, int boatStatus, Vector3 relativeMove)//type为在船前或船后
         {
@@ -541,17 +456,12 @@ namespace Mygame
             onBoat = false;
             if(boatStatus == 0)
             {
-                //movescript.Move(frontmiddle2);
-                //movescript.Move(frontmiddle1);
                 place = "from";
             }
             else
             {
-                //movescript.Move(backmiddle2);
-                //movescript.Move(backmiddle1);
                 place = "to";
             }
-            //movescript.Move(pos+relativeMove);
         }
         public void reset()
         {

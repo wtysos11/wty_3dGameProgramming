@@ -61,30 +61,6 @@ public class FirstController : MonoBehaviour, ISceneController
         }
         actionManager.reset();
     }
-    /*
-    public void moveBoat()
-    {
-        if (userInterface.status != 0)
-            return;
-
-        //Debug.Log("boat");
-        boat.move();
-        if(boat.boatStatus == 0)//需要检查船移动是否造成游戏结束
-        {
-            if(fromCoast.check_over(boat) || toCoast.check_over())
-            {
-                userInterface.status = 1;
-            }
-        }
-        else
-        {
-            if(fromCoast.check_over()|| toCoast.check_over(boat))
-            {
-                userInterface.status = 1;
-            }
-
-        }
-    }*/
     public bool isBoatMove()
     {
         if (userInterface.status != 0)

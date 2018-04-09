@@ -229,7 +229,6 @@ namespace Mygame
         public void clickCharacter(ICharacterController character)
         {
             bool ok=firstController.isCharacterMove(character);
-            BoatController boat = firstController.boat;
             if (ok == false)
                 return;
 
