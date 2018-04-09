@@ -9,7 +9,7 @@ public class UserInterface : MonoBehaviour {
     GUIStyle buttonStyle;
     private void Start()
     {
-        action = SSDirector.getInstance().currentSceneController as IUserAction;
+        action = Director.getInstance().currentSceneController as IUserAction;
 
         style = new GUIStyle();
         style.fontSize = 40;

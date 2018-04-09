@@ -11,14 +11,20 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     public CoastController toCoast;
     public BoatController boat;
     public ICharacterController[] characters;
-    
+    public FirstSceneActionManager actionManager;
+
     void Awake()
     {
         //导演单例模式加载
-        SSDirector director = SSDirector.getInstance();
+        Director director = Director.getInstance();
         director.currentSceneController = this;
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
         this.LoadResources();
+    }
+
+    void Start()
+    {
+        actionManager = GetComponent<FirstSceneActionManager>();
     }
 
     public void LoadResources()

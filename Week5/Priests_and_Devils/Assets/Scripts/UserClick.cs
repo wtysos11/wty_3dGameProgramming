@@ -13,7 +13,7 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
 
     private void Start()
     {
-        action = SSDirector.getInstance().currentSceneController as IUserAction;
+        action = Director.getInstance().currentSceneController as IUserAction;
     }
 
     private void OnMouseDown()
