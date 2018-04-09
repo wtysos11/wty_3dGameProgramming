@@ -167,7 +167,7 @@ namespace Mygame
             deleteList.Clear();
         }
 
-        public void RunAction(GameObject gameobject,BaseAction action,ActionCallback manager)
+        public void addAction(GameObject gameobject,BaseAction action,ActionCallback manager)
         {
             action.gameobject = gameobject;
             action.transform = gameobject.transform;
@@ -185,11 +185,22 @@ namespace Mygame
     //本地管理特化类
     public class FirstSceneActionManager : BaseActionManager, ActionCallback
     {
-        public FirstController sceneController;
+        private float boatSpeed = 20f;
+        private FirstController firstController;
 
         protected new void Start()
         {
-            sceneController = (FirstController)Director.getInstance().currentSceneController;
+            firstController = Director.getInstance().currentSceneController as FirstController;
+        }
+
+        public void moveBoat()
+        {
+            BoatController boat = firstController.boat;
+            if (firstController.isBoatMove() == false)
+                return;
+            LineAction action = LineAction.GetBaseAction(boat.getDestination(),boatSpeed);
+            this.addAction(boat.boat, action, this);
+            firstController.checkGameover();
         }
 
         public void actionDone(BaseAction source)

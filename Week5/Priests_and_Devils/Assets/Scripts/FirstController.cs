@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mygame;
 
-public class FirstController : MonoBehaviour, ISceneController, IUserAction
+public class FirstController : MonoBehaviour, ISceneController
 {
     UserInterface userInterface;
 
@@ -19,12 +19,9 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         Director director = Director.getInstance();
         director.currentSceneController = this;
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
+        actionManager = gameObject.AddComponent<FirstSceneActionManager>() as FirstSceneActionManager;
+        Debug.Log(actionManager == null);
         this.LoadResources();
-    }
-
-    void Start()
-    {
-        actionManager = GetComponent<FirstSceneActionManager>();
     }
 
     public void LoadResources()
@@ -65,6 +62,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         }
         
     }
+    /*
     public void moveBoat()
     {
         if (userInterface.status != 0)
@@ -87,7 +85,39 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             }
 
         }
+    }*/
+    public bool isBoatMove()
+    {
+        if (userInterface.status != 0)
+            return false;
+        else
+            return true;
     }
+
+    //根据当前状况判断是否存在游戏结束的可能，并修改userInterface中的参数以作用
+    public void checkGameover()
+    {
+        if (boat.boatStatus == 0)//需要检查船移动是否造成游戏结束
+        {
+            if (fromCoast.check_over(boat) || toCoast.check_over())
+            {
+                userInterface.status = 1;
+            }
+        }
+        else
+        {
+            if (fromCoast.check_over() || toCoast.check_over(boat))
+            {
+                userInterface.status = 1;
+            }
+        }
+        //是否胜利
+        if(toCoast.check_win())
+        {
+            userInterface.status = 2;
+        }
+    }
+
     public void clickCharacter(ICharacterController charctrl)
     {
         //legal check
@@ -128,47 +158,10 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             whichCoast.OnCoast(charctrl,boat.boatStatus);//下船上岸
             boat.OffBoat(charctrl);
         }
-        
-        int flag = checkGameOver();
-        Debug.Log("check game over:" + flag);
-        if(flag == 1)
-        {
-            userInterface.status = 2;
-        }
-        else if(flag == -1)
-        {
-            userInterface.status = 1;
-        }
+
+        this.checkGameover();
     }
 
     //gameover时返回-1,胜利时返回1
-    public int checkGameOver()
-    {
-        Debug.Log("check for game over");
-
-        if(boat.boatStatus == 0)
-        {
-            if(fromCoast.check_over(boat)||toCoast.check_over())
-            {
-                return -1;
-            }
-        }
-        else
-        {
-            Debug.Log("to coast check");
-            if(fromCoast.check_over()||toCoast.check_over(boat))
-            {
-                return -1;
-            }
-        }
-
-        if(toCoast.check_win())
-        {
-            return 1;
-        }
-
-        return 0;
-    }
-
 
 }

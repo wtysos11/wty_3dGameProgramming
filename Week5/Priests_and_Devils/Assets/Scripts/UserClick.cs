@@ -4,7 +4,7 @@ using UnityEngine;
 using Mygame;
 
 public class UserClick : UnityEngine.EventSystems.EventTrigger {
-    IUserAction action;
+    FirstSceneActionManager actionManager;
     ICharacterController characterController;
     public void setController(ICharacterController character)
     {
@@ -13,7 +13,8 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
 
     private void Start()
     {
-        action = Director.getInstance().currentSceneController as IUserAction;
+        FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+        actionManager = firstController.actionManager;
     }
 
     private void OnMouseDown()
@@ -23,11 +24,12 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
         //Debug.Log("onmousedown!");
         if (characterController==null)
         {
-            action.moveBoat();
+            actionManager.moveBoat();
         }
         else
         {
-            action.clickCharacter(characterController);
+            FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+            firstController.clickCharacter(characterController);
         }
     }
 }

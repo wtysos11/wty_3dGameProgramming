@@ -29,12 +29,6 @@ namespace Mygame
         void LoadResources();
     }
     //用户界面与游戏模型的交互接口
-    public interface IUserAction
-    {
-        void restart();
-        void moveBoat();
-        void clickCharacter(ICharacterController charctrl);
-    }
 
     //移动控制器
     public class MoveController:MonoBehaviour
@@ -330,6 +324,7 @@ namespace Mygame
             frontCharacter = null;
             backCharacter = null;
         }
+        /*
         public void move()
         {
             //Debug.Log("move");
@@ -346,10 +341,31 @@ namespace Mygame
                 boatStatus = 0;
                 movescript.Move(new Vector3(4, 0, 0));
             }
+        }*/
+
+        public Vector3 getDestination()
+        {
+            if(boatStatus == 0)
+            {
+                return new Vector3(8, 0, 0);
+            }
+            else
+            {
+                return new Vector3(4, 0, 0);
+            }
         }
         public bool boatFull()
         {
             if (frontCharacter != null && backCharacter != null)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool boatEmpty()
+        {
+            if (frontCharacter == null && backCharacter == null)
             {
                 return true;
             }

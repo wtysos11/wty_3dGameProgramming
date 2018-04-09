@@ -4,12 +4,12 @@ using UnityEngine;
 using Mygame; 
 public class UserInterface : MonoBehaviour {
     public int status = 0;//0为没有完成，1为失败，2为胜利
-    private IUserAction action;
+    FirstController firstController;
     GUIStyle style;
     GUIStyle buttonStyle;
     private void Start()
     {
-        action = Director.getInstance().currentSceneController as IUserAction;
+        FirstController firstController = Director.getInstance().currentSceneController as FirstController;
 
         style = new GUIStyle();
         style.fontSize = 40;
@@ -28,7 +28,7 @@ public class UserInterface : MonoBehaviour {
             if(GUI.Button(new Rect(Screen.width/2-70,Screen.height/2,140,70),"Restart",buttonStyle))
             {
                 status = 0;
-                action.restart();
+                firstController.restart();
             }
         }
         else if(status == 2)
@@ -37,7 +37,7 @@ public class UserInterface : MonoBehaviour {
             if (GUI.Button(new Rect(Screen.width / 2 - 70, Screen.height / 2, 140, 70), "Restart", buttonStyle))
             {
                 status = 0;
-                action.restart();
+                firstController.restart();
             }
         }
     }
