@@ -13,6 +13,17 @@ public class Shoot : MonoBehaviour {
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (firstController.userInterface.status == 0)
+                firstController.userInterface.status = 1;
+            else if (firstController.userInterface.status == 1)
+                firstController.userInterface.status = 0;
+        }
+
+        if (firstController.userInterface.status == 1)
+            return;
+
         //鼠标左键
         if(Input.GetButtonDown("Fire1"))
         {
@@ -39,5 +50,6 @@ public class Shoot : MonoBehaviour {
             //没有打中飞碟，扣分
             firstController.ShotGround();
         }
+
     }
 }

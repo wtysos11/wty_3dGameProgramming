@@ -33,8 +33,11 @@ public class UFOActionManager : BaseActionManager,ActionCallback {
             );
 
         LineAction moveAction3 = LineAction.GetBaseAction(randomTarget2, moveSpeed);//前往位置3
-        SequenceAction sequenceAction = SequenceAction.GetBaseAction(-1,0,new List<BaseAction> { moveAction1, moveAction2,moveAction3 });//制作SequenceAction
 
+        Vector3 randomTarget4 = new Vector3(ufo.ufo.transform.position.x, ufo.ufo.transform.position.y, ufo.ufo.transform.position.z);
+
+        LineAction moveAction4 = LineAction.GetBaseAction(randomTarget2, moveSpeed);//前往位置4
+        SequenceAction sequenceAction = SequenceAction.GetBaseAction(-1, 0, new List<BaseAction> { moveAction1, moveAction2, moveAction3,moveAction4 });//制作SequenceAction
         addAction(ufo.ufo, sequenceAction, this);
     }
 

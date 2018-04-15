@@ -5,13 +5,13 @@ using Mygame;
 
 public class FirstController : MonoBehaviour, ISceneController
 {
-    UserInterface userInterface;
+    public UserInterface userInterface;
     public UFOActionManager actionManager;
     UFOFactory ufoFactory;
     Shoot shoot;
     bool roundStarted = false;
     public Score score;
-
+    public DifficultyManager difficultyManager;
     void Awake()
     {
         //导演单例模式加载
@@ -22,6 +22,7 @@ public class FirstController : MonoBehaviour, ISceneController
         ufoFactory = gameObject.AddComponent<UFOFactory>() as UFOFactory;
         shoot = gameObject.AddComponent<Shoot>() as Shoot;
         score = new Score();
+        difficultyManager = new DifficultyManager();
         this.LoadResources();
     }
 
@@ -40,13 +41,19 @@ public class FirstController : MonoBehaviour, ISceneController
     //restart Button，可以后期再做
     public void restart()
     {
-        List<UFOObject> usingList = ufoFactory.getUsingList();
-        foreach(UFOObject ufoObj in usingList)
+        List<UFOObject> list = ufoFactory.getUsingList();
+        List<UFOObject> usingList = new List<UFOObject>();
+        list.ForEach(i => usingList.Add(i));
+        int ceil = usingList.Count;
+        for(int i=0;i<ceil;i++)
         {
+            Debug.Log(i + " " + ceil+" "+usingList.Count);
+            UFOObject ufoObj = usingList[i];
             ufoFactory.recycle(ufoObj);
             actionManager.removeAction(ufoObj.ufo);
         }
-
+        difficultyManager.clear();
+        score.clear();
         newRound();
 
     }
@@ -56,7 +63,7 @@ public class FirstController : MonoBehaviour, ISceneController
         UFOObject[] ufoObjects = new UFOObject[10];
         for(int i=0;i<10;i++)
         {
-            ufoObjects[i] = ufoFactory.produceUFO(new UFOAttr(1f, 1f, new Vector3(50, 5, 50)));
+            ufoObjects[i] = ufoFactory.produceUFO(difficultyManager.getAttr());
             actionManager.ufoRandomMove(ufoObjects[i]);
         }
         
@@ -64,7 +71,8 @@ public class FirstController : MonoBehaviour, ISceneController
     private void roundDone()
     {
         roundStarted = false;
-        this.restart();
+        difficultyManager.levelUp();
+        newRound();
     }
 
     //某个UFO对象被击中了

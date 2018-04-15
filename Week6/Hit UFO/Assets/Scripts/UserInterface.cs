@@ -28,11 +28,25 @@ public class UserInterface : MonoBehaviour {
         if(status == 0)
         {
             GUI.Label(new Rect(0,0,50,50), firstController.score.getScore().ToString(),style);
+            GUI.Label(new Rect(10, 50, 50, 50),"级别"+firstController.difficultyManager.getRank().ToString(), style);
+            GUI.Label(new Rect(50, 100, 100, 50), "Press esc to pause.", style);
             /*
             if(GUI.Button(new Rect(0,60,140,70), "Restart", buttonStyle))
             {
                 firstController.restart();
             }*/
+        }
+        else if(status == 1)
+        {
+            GUI.Label(new Rect(Screen.width / 2 - 35, 20, 70, 70), "Pause", style);
+            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2, 140, 70), "Restart", buttonStyle))
+            {
+                firstController.restart();
+            }
+            else if (GUI.Button(new Rect(Screen.width / 2 + 50, Screen.height / 2, 140, 70), "Resume", buttonStyle))
+            {
+                status = 0;
+            }
         }
         /*
         else if(status == 1)
