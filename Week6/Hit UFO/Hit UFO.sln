@@ -1,12 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hit UFO.Plugins", "Hit UFO.Plugins.csproj", "{FE5AF654-7DE5-2086-5F85-C6D98C6B35C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hit UFO", "Hit UFO.csproj", "{F54D7680-9D3E-E2FA-5BB3-9EA5E9ED6230}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hit UFO.Editor.Plugins", "Hit UFO.Editor.Plugins.csproj", "{2D1487E3-8284-54C0-E0F0-942A81C81CCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE5AF654-7DE5-2086-5F85-C6D98C6B35C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5AF654-7DE5-2086-5F85-C6D98C6B35C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5AF654-7DE5-2086-5F85-C6D98C6B35C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5AF654-7DE5-2086-5F85-C6D98C6B35C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F54D7680-9D3E-E2FA-5BB3-9EA5E9ED6230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F54D7680-9D3E-E2FA-5BB3-9EA5E9ED6230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F54D7680-9D3E-E2FA-5BB3-9EA5E9ED6230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F54D7680-9D3E-E2FA-5BB3-9EA5E9ED6230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D1487E3-8284-54C0-E0F0-942A81C81CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1487E3-8284-54C0-E0F0-942A81C81CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1487E3-8284-54C0-E0F0-942A81C81CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1487E3-8284-54C0-E0F0-942A81C81CCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
