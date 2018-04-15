@@ -10,6 +10,7 @@ public class FirstController : MonoBehaviour, ISceneController
     UFOFactory ufoFactory;
     Shoot shoot;
     bool roundStarted = false;
+    public Score score;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class FirstController : MonoBehaviour, ISceneController
         actionManager = gameObject.AddComponent<UFOActionManager>() as UFOActionManager;
         ufoFactory = gameObject.AddComponent<UFOFactory>() as UFOFactory;
         shoot = gameObject.AddComponent<Shoot>() as Shoot;
+        score = new Score();
         this.LoadResources();
     }
 
@@ -27,7 +29,8 @@ public class FirstController : MonoBehaviour, ISceneController
     public void LoadResources()
     {
         new FirstCharacterController();
-        Instantiate(Resources.Load("Terrain"));
+        GameObject terrain=GameObject.Instantiate(Resources.Load("Terrain")) as GameObject;
+        terrain.name = "Terrain";
     }
     public void Start()
     {
@@ -37,6 +40,14 @@ public class FirstController : MonoBehaviour, ISceneController
     //restart Button，可以后期再做
     public void restart()
     {
+        List<UFOObject> usingList = ufoFactory.getUsingList();
+        foreach(UFOObject ufoObj in usingList)
+        {
+            ufoFactory.recycle(ufoObj);
+            actionManager.removeAction(ufoObj.ufo);
+        }
+
+        newRound();
 
     }
     private void newRound()
@@ -50,11 +61,27 @@ public class FirstController : MonoBehaviour, ISceneController
         }
         
     }
+    private void roundDone()
+    {
+        roundStarted = false;
+        this.restart();
+    }
+
     //某个UFO对象被击中了
     public void UFOIsShot(UFOObject ufoObject)
     {
-        Debug.Log("UFOIsShot");
         actionManager.removeAction(ufoObject.ufo);
         ufoFactory.recycle(ufoObject);
+        score.update();
+
+        if(ufoFactory.usingListEmpty())
+        {
+            this.roundDone();
+        }
+
+    }
+    public void ShotGround()
+    {
+        score.fail();
     }
 }

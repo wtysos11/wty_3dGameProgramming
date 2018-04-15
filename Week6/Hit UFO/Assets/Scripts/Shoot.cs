@@ -14,7 +14,7 @@ public class Shoot : MonoBehaviour {
     private void Update()
     {
         //鼠标左键
-        if(Input.GetButton("Fire1"))
+        if(Input.GetButtonDown("Fire1"))
         {
             //Debug.Log("input mouse position:" + Input.mousePosition.ToString());
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -24,6 +24,11 @@ public class Shoot : MonoBehaviour {
             for(int i=0;i<hits.Length;i++)
             {
                 RaycastHit hit = hits[i];
+                if(hit.transform.name=="Terrain")
+                {
+                    firstController.ShotGround();
+                    return;
+                }
                 UFOObject ufoObject = hit.transform.GetComponent<UFORender>().ufoObj;
                 if(ufoObject!=null)
                 {
@@ -31,6 +36,8 @@ public class Shoot : MonoBehaviour {
                     return;
                 }
             }
+            //没有打中飞碟，扣分
+            firstController.ShotGround();
         }
     }
 }

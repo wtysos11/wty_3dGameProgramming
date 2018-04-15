@@ -35,6 +35,7 @@ public class UFOFactory : MonoBehaviour {
 
         newUFO.setAttr(attr);
         usingList.Add(newUFO);
+        newUFO.randomChange();
         newUFO.visible();
         return newUFO;
     }
@@ -44,5 +45,17 @@ public class UFOFactory : MonoBehaviour {
         ufo.invisible();
         usingList.Remove(ufo);
         freeQueue.Enqueue(ufo);
+    }
+
+    public bool usingListEmpty()
+    {
+        if (usingList.Count == 0)
+            return true;
+        else
+            return false;
+    }
+    public List<UFOObject> getUsingList()
+    {
+        return usingList;
     }
 }

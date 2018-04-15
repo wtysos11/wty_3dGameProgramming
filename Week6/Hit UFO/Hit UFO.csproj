@@ -245,8 +245,10 @@
     <Compile Include="Assets\Scripts\ActionManager\UFOActionManager.cs" />
     <Compile Include="Assets\Scripts\Base.cs" />
     <Compile Include="Assets\Scripts\DifficultyController.cs" />
+    <Compile Include="Assets\Scripts\DifficultyManager.cs" />
     <Compile Include="Assets\Scripts\FirstCharacterController.cs" />
     <Compile Include="Assets\Scripts\FirstController.cs" />
+    <Compile Include="Assets\Scripts\Score.cs" />
     <Compile Include="Assets\Scripts\Shoot.cs" />
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\UFO\UFOAttr.cs" />
