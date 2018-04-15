@@ -181,6 +181,18 @@ namespace Mygame
             addList.Add(action);
         }
 
+        public void removeAction(GameObject gameobject)
+        {
+            foreach(KeyValuePair<int, BaseAction> kv in actions)
+            {
+                if(kv.Value.gameobject == gameobject)
+                {
+                    kv.Value.destroy = true;
+                    kv.Value.enable = false;
+                }
+            }
+        }
+
         protected void Start()
         {
             //nothing to do in start
@@ -188,10 +200,4 @@ namespace Mygame
 
     }
 
-    //本地管理特化类
-    public class FirstSceneActionManager : BaseActionManager, ActionCallback
-    {
-        private FirstController firstController;
-
-    }
 }

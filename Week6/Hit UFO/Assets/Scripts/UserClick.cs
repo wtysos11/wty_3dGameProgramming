@@ -4,7 +4,7 @@ using UnityEngine;
 using Mygame;
 
 public class UserClick : UnityEngine.EventSystems.EventTrigger {
-    FirstSceneActionManager actionManager;
+    UFOActionManager actionManager;
 
     private void Start()
     {
@@ -14,17 +14,6 @@ public class UserClick : UnityEngine.EventSystems.EventTrigger {
 
     private void OnMouseDown()
     {
-        if (actionManager.canClick == false)
-            return;
 
-        //Debug.Log("onmousedown!");
-        if (characterController==null)
-        {
-            actionManager.moveBoat();
-        }
-        else
-        {
-            actionManager.clickCharacter(characterController);
-        }
     }
 }

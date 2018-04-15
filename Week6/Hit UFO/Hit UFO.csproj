@@ -242,9 +242,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ActionManager\Action.cs" />
+    <Compile Include="Assets\Scripts\ActionManager\UFOActionManager.cs" />
     <Compile Include="Assets\Scripts\Base.cs" />
+    <Compile Include="Assets\Scripts\DifficultyController.cs" />
+    <Compile Include="Assets\Scripts\FirstCharacterController.cs" />
     <Compile Include="Assets\Scripts\FirstController.cs" />
+    <Compile Include="Assets\Scripts\Shoot.cs" />
+    <Compile Include="Assets\Scripts\Singleton.cs" />
+    <Compile Include="Assets\Scripts\UFO\UFOAttr.cs" />
     <Compile Include="Assets\Scripts\UFO\UFOFactory.cs" />
+    <Compile Include="Assets\Scripts\UFO\UFOObject.cs" />
+    <Compile Include="Assets\Scripts\UFO\UFORender.cs" />
     <Compile Include="Assets\Scripts\UserClick.cs" />
     <Compile Include="Assets\Scripts\UserInterface.cs" />
   </ItemGroup>
@@ -253,6 +261,11 @@
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
