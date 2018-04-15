@@ -8,7 +8,7 @@ public class FirstController : MonoBehaviour, ISceneController
     UserInterface userInterface;
     public UFOActionManager actionManager;
     UFOFactory ufoFactory;
-
+    Shoot shoot;
     bool roundStarted = false;
 
     void Awake()
@@ -19,6 +19,7 @@ public class FirstController : MonoBehaviour, ISceneController
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
         actionManager = gameObject.AddComponent<UFOActionManager>() as UFOActionManager;
         ufoFactory = gameObject.AddComponent<UFOFactory>() as UFOFactory;
+        shoot = gameObject.AddComponent<Shoot>() as Shoot;
         this.LoadResources();
     }
 
@@ -52,6 +53,7 @@ public class FirstController : MonoBehaviour, ISceneController
     //某个UFO对象被击中了
     public void UFOIsShot(UFOObject ufoObject)
     {
+        Debug.Log("UFOIsShot");
         actionManager.removeAction(ufoObject.ufo);
         ufoFactory.recycle(ufoObject);
     }

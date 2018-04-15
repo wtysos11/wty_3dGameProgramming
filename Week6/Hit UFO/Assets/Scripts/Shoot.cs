@@ -5,12 +5,7 @@ using Mygame;
 public class Shoot : MonoBehaviour {
     public Camera camera;
     private FirstController firstController;
-    LayerMask layerMask;
 
-    private void Awake()
-    {
-        layerMask = LayerMask.GetMask("Shootable", "RayFinish");
-    }
     private void Start()
     {
         camera = Camera.main;
@@ -21,17 +16,20 @@ public class Shoot : MonoBehaviour {
         //鼠标左键
         if(Input.GetButton("Fire1"))
         {
+            //Debug.Log("input mouse position:" + Input.mousePosition.ToString());
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray,out hit, Mathf.Infinity,layerMask))
+            RaycastHit[] hits;
+            hits = Physics.RaycastAll(ray);
+            //Debug.Log("hits.Length" + hits.Length.ToString());
+            for(int i=0;i<hits.Length;i++)
             {
-                if(hit.transform.gameObject.layer == 8)
+                RaycastHit hit = hits[i];
+                UFOObject ufoObject = hit.transform.GetComponent<UFORender>().ufoObj;
+                if(ufoObject!=null)
                 {
-                    UFOObject ufoObject = hit.transform.GetComponent<UFORender>().ufoObj;
                     firstController.UFOIsShot(ufoObject);
+                    return;
                 }
-
             }
         }
     }
