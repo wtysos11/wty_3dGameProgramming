@@ -21,8 +21,8 @@ public class FirstController : MonoBehaviour, ISceneController
         actionManager = gameObject.AddComponent<UFOActionManager>() as UFOActionManager;
         ufoFactory = gameObject.AddComponent<UFOFactory>() as UFOFactory;
         shoot = gameObject.AddComponent<Shoot>() as Shoot;
-        score = new Score();
         difficultyManager = new DifficultyManager();
+        score = new Score();
         this.LoadResources();
     }
 

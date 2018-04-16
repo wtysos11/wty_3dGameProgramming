@@ -42,6 +42,7 @@ public class UserInterface : MonoBehaviour {
             if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2, 140, 70), "Restart", buttonStyle))
             {
                 firstController.restart();
+                status = 0;
             }
             else if (GUI.Button(new Rect(Screen.width / 2 + 50, Screen.height / 2, 140, 70), "Resume", buttonStyle))
             {
