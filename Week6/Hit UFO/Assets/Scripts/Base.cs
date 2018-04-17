@@ -9,7 +9,7 @@ namespace Mygame
     {
         private static Director _instance;
         public ISceneController currentSceneController { get; set; }//导演手中的场景控制器
-                                                                    //坐标管理
+                                                                    //坐标管理。
 
         public static Director getInstance()
         {

@@ -15,17 +15,17 @@ public class UFOFactory : MonoBehaviour {
         if(_instance == null)
         {
             _instance = new UFOFactory();
-            _instance.freeQueue = new Queue<UFOObject>();
-            _instance.usingList = new List<UFOObject>();
 
-            _instance.originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
-            _instance.originalUFO.SetActive(false);
         }
         return _instance;
     }
     protected UFOFactory()
     {
+        freeQueue = new Queue<UFOObject>();
+        usingList = new List<UFOObject>();
 
+        originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
+        originalUFO.SetActive(false);
     }
 
     public UFOObject produceUFO(UFOAttr attr)
