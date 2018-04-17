@@ -8,15 +8,24 @@ public class UFOFactory : MonoBehaviour {
     private int totalNumber = 0;
 
     GameObject originalUFO;//UFO原型
-    
 
-    private void Awake()
+    private static UFOFactory _instance;
+    public static UFOFactory getInstance()
     {
-        freeQueue = new Queue<UFOObject>();
-        usingList = new List<UFOObject>();
+        if(_instance == null)
+        {
+            _instance = new UFOFactory();
+            _instance.freeQueue = new Queue<UFOObject>();
+            _instance.usingList = new List<UFOObject>();
 
-        originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
-        originalUFO.SetActive(false);
+            _instance.originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
+            _instance.originalUFO.SetActive(false);
+        }
+        return _instance;
+    }
+    protected UFOFactory()
+    {
+
     }
 
     public UFOObject produceUFO(UFOAttr attr)

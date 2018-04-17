@@ -19,7 +19,7 @@ public class FirstController : MonoBehaviour, ISceneController
         director.currentSceneController = this;
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
         actionManager = gameObject.AddComponent<UFOActionManager>() as UFOActionManager;
-        ufoFactory = gameObject.AddComponent<UFOFactory>() as UFOFactory;
+        ufoFactory = UFOFactory.getInstance();
         shoot = gameObject.AddComponent<Shoot>() as Shoot;
         difficultyManager = new DifficultyManager();
         score = new Score();
