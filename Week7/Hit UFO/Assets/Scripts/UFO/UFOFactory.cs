@@ -25,6 +25,7 @@ public class UFOFactory : MonoBehaviour {
         usingList = new List<UFOObject>();
 
         originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
+        
         originalUFO.SetActive(false);
     }
 
@@ -35,6 +36,9 @@ public class UFOFactory : MonoBehaviour {
         {
             GameObject newObj = GameObject.Instantiate(originalUFO);
             newUFO = new UFOObject(newObj);
+            newUFO.ufo.transform.name = "ufo" + totalNumber;
+            CollisionRev rev = newUFO.ufo.AddComponent<CollisionRev>();
+            rev.ufo = newUFO;
             totalNumber++;
         }
         else

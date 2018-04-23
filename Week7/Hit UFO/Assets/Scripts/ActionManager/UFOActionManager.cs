@@ -11,7 +11,7 @@ public class UFOActionManager : BaseActionManager,ActionCallback {
         //注意修改
         Vector3 randomTarget1 = new Vector3(
             Random.Range(currentPos.x - 10, currentPos.x + 10),
-            Random.Range(1, currentPos.y + 10),
+            Random.Range(1, currentPos.y+3),
             Random.Range(currentPos.z - 10, currentPos.z + 10)
             );
         LineAction moveAction1 = LineAction.GetBaseAction(randomTarget1, moveSpeed);//前往位置1

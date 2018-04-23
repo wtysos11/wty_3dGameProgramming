@@ -28,18 +28,21 @@ public class Shoot : MonoBehaviour {
         if(Input.GetButtonDown("Fire1"))
         {
             //Debug.Log("input mouse position:" + Input.mousePosition.ToString());
+            bool shootground=false;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits;
             hits = Physics.RaycastAll(ray);
-            //Debug.Log("hits.Length" + hits.Length.ToString());
+
             for(int i=0;i<hits.Length;i++)
             {
                 RaycastHit hit = hits[i];
+
                 if(hit.transform.name=="Terrain")
                 {
-                    firstController.ShotGround();
-                    return;
+                    shootground = true;//because of unknown reason,sometimes shoot on the ufo will first shoot on the ground(situation:ufo flies very low and in the grass)
+                    continue;
                 }
+                
                 UFOObject ufoObject = hit.transform.GetComponent<UFORender>().ufoObj;
                 if(ufoObject!=null)
                 {

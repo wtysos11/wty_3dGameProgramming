@@ -244,6 +244,7 @@
     <Compile Include="Assets\Scripts\ActionManager\Action.cs" />
     <Compile Include="Assets\Scripts\ActionManager\UFOActionManager.cs" />
     <Compile Include="Assets\Scripts\Base.cs" />
+    <Compile Include="Assets\Scripts\CollisionRev.cs" />
     <Compile Include="Assets\Scripts\DifficultyManager.cs" />
     <Compile Include="Assets\Scripts\FirstCharacterController.cs" />
     <Compile Include="Assets\Scripts\FirstController.cs" />
