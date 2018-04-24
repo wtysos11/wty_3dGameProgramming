@@ -2,272 +2,203 @@
 使用分支管理来存储各周的文件，master只保留Readme
 [演示视频请点此处](https://www.bilibili.com/video/av22200145/)
 
-# 第六周 打飞碟
-参考代码：https://blog.csdn.net/c486c/article/details/79952255
-具体代码：https://github.com/wtysos11/wty_3dGameProgramming/tree/Week6
+# 第七周 打飞碟
 ## 程序基本框架
-首先是沿用了上周所做的动作管理器与场景控制器的框架，然后使用单例工厂来对飞碟进行生产、回收来减少消耗。
+使用了一个动作适配器来在运动学动作和物理动作管理器之间进行切换
 
 ## 规则设定
 设定每一阶段打中飞碟的分数为：阶段数+1，并且规定没有打中飞碟分数减一。实现了ESC菜单，但是还没做出暂停。
+同时如果飞碟撞到地上或是飞离原点40个单位会自动消失，并且扣1分。如果分数为负的，则等级会下降。
 
 ## 具体代码
-### 动作管理
-使用特化的UFOManager类进行管理。
-飞碟动作产生，产生多个随机位置，并最后让它们回到原点：
+物理类
 ```C#
-    public void ufoRandomMove(UFOObject ufo)
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PhysicsActionManager : MonoBehaviour {
+
+    public void addForce(GameObject gameobject,Vector3 force)
     {
-        float moveSpeed = ufo.attr.speed;
-        Vector3 currentPos = ufo.attr.originPosition;
-        //注意修改
-        Vector3 randomTarget1 = new Vector3(
-            Random.Range(currentPos.x - 10, currentPos.x + 10),
-            Random.Range(1, currentPos.y + 10),
-            Random.Range(currentPos.z - 10, currentPos.z + 10)
-            );
-        LineAction moveAction1 = LineAction.GetBaseAction(randomTarget1, moveSpeed);//前往位置1
-
-        //目标位置2
-        Vector3 randomTarget2 = new Vector3(
-            Random.Range(currentPos.x - 10, currentPos.x + 10),
-            Random.Range(1, currentPos.y + 5),
-            Random.Range(currentPos.z - 10, currentPos.z + 10)
-            );
-
-        LineAction moveAction2 = LineAction.GetBaseAction(randomTarget2, moveSpeed);//前往位置2
-
-        //目标位置3
-        Vector3 randomTarget3 = new Vector3(
-            Random.Range(currentPos.x - 10, currentPos.x + 10),
-            Random.Range(1, currentPos.y + 5),
-            Random.Range(currentPos.z - 10, currentPos.z + 10)
-            );
-
-        LineAction moveAction3 = LineAction.GetBaseAction(randomTarget2, moveSpeed);//前往位置3
-
-        Vector3 randomTarget4 = new Vector3(ufo.ufo.transform.position.x, ufo.ufo.transform.position.y, ufo.ufo.transform.position.z);
-
-        LineAction moveAction4 = LineAction.GetBaseAction(randomTarget2, moveSpeed);//前往位置4
-        SequenceAction sequenceAction = SequenceAction.GetBaseAction(-1, 0, new List<BaseAction> { moveAction1, moveAction2, moveAction3,moveAction4 });//制作SequenceAction
-        addAction(ufo.ufo, sequenceAction, this);
-    }
-
-```
-### UFO管理
-使用带缓存的工厂模式对UFO进行管理，由工厂统一创建和回收UFO。
-```C#
-public class UFOFactory : MonoBehaviour {
-    Queue<UFOObject> freeQueue; //储存正在空闲时的UFO
-    List<UFOObject> usingList;  //储存正在使用时的UFO
-    private int totalNumber = 0;
-
-    GameObject originalUFO;//UFO原型
-
-    private static UFOFactory _instance;
-    public static UFOFactory getInstance()
-    {
-        if(_instance == null)
+        ConstantForce originForce = gameobject.GetComponent<ConstantForce>();
+        if(originForce!=null)
         {
-            _instance = new UFOFactory();
-
-        }
-        return _instance;
-    }
-    protected UFOFactory()
-    {
-        freeQueue = new Queue<UFOObject>();
-        usingList = new List<UFOObject>();
-
-        originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
-        originalUFO.SetActive(false);
-    }
-
-    public UFOObject produceUFO(UFOAttr attr)
-    {
-        UFOObject newUFO;
-        if(freeQueue.Count == 0)
-        {
-            GameObject newObj = GameObject.Instantiate(originalUFO);
-            newUFO = new UFOObject(newObj);
-            totalNumber++;
+            originForce.enabled = true;
+            originForce.force = force;
         }
         else
         {
-            newUFO = freeQueue.Dequeue();
+            gameobject.AddComponent<ConstantForce>().force = force;
         }
-
-        newUFO.setAttr(attr);
-        usingList.Add(newUFO);
-        newUFO.randomChange();
-        newUFO.visible();
-        return newUFO;
     }
 
-    public void recycle(UFOObject ufo)
+    public void removeForce(GameObject gameobject)
     {
-        ufo.invisible();
-        usingList.Remove(ufo);
-        freeQueue.Enqueue(ufo);
-    }
-
-    public bool usingListEmpty()
-    {
-        if (usingList.Count == 0)
-            return true;
-        else
-            return false;
+        if(gameObject.GetComponent<ConstantForce>())
+             gameobject.GetComponent<ConstantForce>().enabled = false;
     }
 }
 
+
 ```
-
-### 场景控制器
-场景控制器与导演类与上次作业基本相同，飞碟击中与没有击中的判断和每个回合的判断都有场景控制器来决定。第一人称控制器也由场景控制器负责初始化。
+### 适配器
+接口与实现
 ```C#
-
-public class FirstController : MonoBehaviour, ISceneController
+public interface ActionAdapterInterface
 {
-    public UserInterface userInterface;
+    void ufoRandomMove(UFOObject ufoObject);
+}
+
+public class ActionAdapter : ActionAdapterInterface {
+
+    private bool mode;//mode = false 时使用运动学，mode=true时使用重力
     public UFOActionManager actionManager;
-    UFOFactory ufoFactory;
-    Shoot shoot;
-    bool roundStarted = false;
-    public Score score;
-    public DifficultyManager difficultyManager;
-    void Awake()
+    public PhysicsActionManager physicsActionManager;
+    public ActionAdapter(GameObject gameObject)
     {
-        //导演单例模式加载
-        Director director = Director.getInstance();
-        director.currentSceneController = this;
-        userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
+        mode = false;
         actionManager = gameObject.AddComponent<UFOActionManager>() as UFOActionManager;
-        ufoFactory = UFOFactory.getInstance();
-        shoot = gameObject.AddComponent<Shoot>() as Shoot;
-        difficultyManager = new DifficultyManager();
-        score = new Score();
-        this.LoadResources();
+        physicsActionManager = gameObject.AddComponent<PhysicsActionManager>() as PhysicsActionManager;
     }
 
-    //ISceneController接口类，负责加载资源
-    public void LoadResources()
+    public void switchMode()
     {
-        new FirstCharacterController();
-        GameObject terrain=GameObject.Instantiate(Resources.Load("Terrain")) as GameObject;
-        terrain.name = "Terrain";
-    }
-    public void Start()
-    {
-        newRound();
+        mode = !mode;
     }
 
-    //restart Button，可以后期再做
-    public void restart()
+    public bool getMode()
     {
-        List<UFOObject> list = ufoFactory.getUsingList();
-        List<UFOObject> usingList = new List<UFOObject>();
-        list.ForEach(i => usingList.Add(i));
-        int ceil = usingList.Count;
-        for(int i=0;i<ceil;i++)
+        return mode;
+    }
+
+
+    public void ufoRandomMove(UFOObject ufoObject)
+    {
+        if(mode == false)
         {
-            Debug.Log(i + " " + ceil+" "+usingList.Count);
-            UFOObject ufoObj = usingList[i];
-            ufoFactory.recycle(ufoObj);
-            actionManager.removeAction(ufoObj.ufo);
+            actionManager.ufoRandomMove(ufoObject);
+            physicsActionManager.removeForce(ufoObject.ufo);
         }
-        difficultyManager.clear();
-        score.clear();
-        newRound();
-
-    }
-    private void newRound()
-    {
-        roundStarted = true;
-        UFOObject[] ufoObjects = new UFOObject[10];
-        for(int i=0;i<10;i++)
+        else
         {
-            ufoObjects[i] = ufoFactory.produceUFO(difficultyManager.getAttr());
-            actionManager.ufoRandomMove(ufoObjects[i]);
+            actionManager.removeAction(ufoObject.ufo);
+            physicsActionManager.addForce(ufoObject.ufo, new Vector3(Random.Range(-1*ufoObject.attr.speed,ufoObject.attr.speed),
+                Random.Range(-1*ufoObject.attr.speed,0),
+                Random.Range(-1 * ufoObject.attr.speed, ufoObject.attr.speed)));
         }
-        
-    }
-    private void roundDone()
-    {
-        roundStarted = false;
-        difficultyManager.levelUp();
-        newRound();
     }
 
-    //某个UFO对象被击中了
-    public void UFOIsShot(UFOObject ufoObject)
+    public void removeAction(GameObject gameObject)
     {
-        actionManager.removeAction(ufoObject.ufo);
-        ufoFactory.recycle(ufoObject);
-        score.update();
-
-        if(ufoFactory.usingListEmpty())
+        if(mode == false)
         {
-            this.roundDone();
+            actionManager.removeAction(gameObject);
         }
-
-    }
-    public void ShotGround()
-    {
-        score.fail();
+        else
+        {
+            physicsActionManager.removeForce(gameObject);
+        }
     }
 }
+
 ```
 
-### 射击对象
-主要设计部分的控制对象。
+### 撞击控制
+使用了刚体组件后会有飞碟自己相撞的情况，需要与其和地面相撞的情况分开处理
 ```C#
-public class Shoot : MonoBehaviour {
-    public Camera camera;
-    private FirstController firstController;
-
-    private void Start()
+public class CollisionRev : MonoBehaviour {
+    public UFOObject ufo;
+    private Dictionary<int, UFOObject> collisionCache;
+    private readonly UFOObject TerrainEqual;//use to stand for terrain in ufoObject in collisionCache. Avoid mix with null.
+    public CollisionRev()
     {
-        camera = Camera.main;
-        firstController = Director.getInstance().currentSceneController as FirstController;
+        collisionCache = new Dictionary<int, UFOObject>();
     }
-    private void Update()
+    /*
+     避免同tag相撞的想法：
+        使用collisionCache，以Time.frameCount为索引来进行搜索。如果在collisionCache中没有索引，则将UFOObject对象加入其中。
+        如果在collisionCache中有索引，进行判断
+        使用Dictionary.ContainsKey(key)进行判断
+            如果说两者都是UFO，那么忽略
+            如果一者是UFO，一者是terrain，那么进行销毁。
+
+       特殊情况：Terrain的撞击只会发生一次
+         */
+    private void OnCollisionEnter(Collision collision)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        /*
+        Debug.Log("Collision @" + Time.frameCount.ToString());
+        Debug.Log("GameObject is :" + collision.gameObject.name);
+        if (collision.collider) Debug.Log("Collider belongs to :" + collision.collider.gameObject.name);
+        if (collision.rigidbody) Debug.Log("Rigidbody belong to :" + collision.rigidbody.gameObject.name);*/
+        //判断在该帧之前是否有发生过判断
+        //如果没有，直接插入，过
+        //Debug.Log(collisionCache.ContainsKey(Time.frameCount));
+        if(!collisionCache.ContainsKey(Time.frameCount))
         {
-            if (firstController.userInterface.status == 0)
-                firstController.userInterface.status = 1;
-            else if (firstController.userInterface.status == 1)
-                firstController.userInterface.status = 0;
-        }
-
-        if (firstController.userInterface.status == 1)
-            return;
-
-        //鼠标左键
-        if(Input.GetButtonDown("Fire1"))
-        {
-            //Debug.Log("input mouse position:" + Input.mousePosition.ToString());
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(ray);
-            //Debug.Log("hits.Length" + hits.Length.ToString());
-            for(int i=0;i<hits.Length;i++)
+            if(collision.gameObject.name == "Terrain")
             {
-                RaycastHit hit = hits[i];
-                if(hit.transform.name=="Terrain")
+                if (ufo != null)//hit on the ground.
                 {
-                    firstController.ShotGround();
-                    return;
-                }
-                UFOObject ufoObject = hit.transform.GetComponent<UFORender>().ufoObj;
-                if(ufoObject!=null)
-                {
-                    firstController.UFOIsShot(ufoObject);
-                    return;
+                    FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+                    firstController.HitOnGround(ufo);
                 }
             }
-            //没有打中飞碟，扣分
-            firstController.ShotGround();
+            else
+            {
+                collisionCache[Time.frameCount] = ufo;
+            }
+        }
+            //如果有，判断是否与地面发生撞击
+        else if (collisionCache[Time.frameCount] == null || collision.gameObject.name == "Terrain")//有且只有一个Terrain
+        {
+            FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+            if (ufo != null)//hit on the ground.
+            {
+                firstController.HitOnGround(ufo);
+            }
+            else
+            {
+                firstController.HitOnGround(collisionCache[Time.frameCount]);
+            }
+        }
+    }
+}
+
+```
+
+### 位置控制
+因为有可能会飞离太远导致基本不可能射中，所以设置飞离玩家所在点40个单位后自动销毁，销毁由FirstController控制。
+```C#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Mygame;
+public class UFORender : MonoBehaviour {
+
+    public UFOObject ufoObj;
+    private void Start()
+    {
+        for(int i=0;i<transform.childCount;i++)
+        {
+            GameObject g = transform.GetChild(i).gameObject;
+            g.AddComponent<UFORender>().ufoObj = ufoObj;
+        }
+    }
+
+    /*
+判断距离
+如果超出指定距离，就自动把它撤销。
+*/
+    private void Update()
+    {
+        FirstController firstController = Director.getInstance().currentSceneController as FirstController;
+        Vector3 origin = firstController.originPos;
+        float dist = Vector3.Distance(origin, ufoObj.ufo.transform.position);
+        if(dist>40)
+        {
+            firstController.HitOnGround(ufoObj);
         }
 
     }
