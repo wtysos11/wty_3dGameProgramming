@@ -19,6 +19,11 @@ public class DifficultyManager{
         if(rank<4)
             rank++;
     }
+    public void levelDown()
+    {
+        if (rank >= 1)
+            rank--;
+    }
     public UFOAttr getAttr()
     {
         return attrs[rank];

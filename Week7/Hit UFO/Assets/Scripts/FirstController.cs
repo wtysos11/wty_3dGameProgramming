@@ -79,6 +79,10 @@ public class FirstController : MonoBehaviour, ISceneController
         {
             difficultyManager.levelUp();
         }
+        else
+        {
+            difficultyManager.levelDown();
+        }
         newRound();
     }
 
