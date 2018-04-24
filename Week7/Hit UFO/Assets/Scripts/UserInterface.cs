@@ -38,14 +38,19 @@ public class UserInterface : MonoBehaviour {
         }
         else if(status == 1)
         {
-            GUI.Label(new Rect(Screen.width / 2 - 35, 20, 70, 70), "Pause", style);
-            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2, 140, 70), "Restart", buttonStyle))
+            GUI.Label(new Rect(Screen.width / 2, 20, 70, 70), "Pause", style);
+            if (GUI.Button(new Rect(Screen.width / 2 - 140, Screen.height / 2-40, 140, 70), "Restart", buttonStyle))
             {
                 firstController.restart();
                 status = 0;
             }
-            else if (GUI.Button(new Rect(Screen.width / 2 + 50, Screen.height / 2, 140, 70), "Resume", buttonStyle))
+            else if (GUI.Button(new Rect(Screen.width / 2 + 70, Screen.height / 2-40, 140, 70), "Resume", buttonStyle))
             {
+                status = 0;
+            }
+            else if (GUI.Button(new Rect(Screen.width / 2-30, Screen.height / 2+40, 140, 70), "SwitchMode", buttonStyle))
+            {
+                firstController.switchMode();
                 status = 0;
             }
         }

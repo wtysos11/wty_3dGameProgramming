@@ -8,11 +8,11 @@ public class DifficultyManager{
     public DifficultyManager()
     {
         attrs = new UFOAttr[5];
-        attrs[0] = new UFOAttr(1f, new Vector3(50, 5, 50));
-        attrs[1] = new UFOAttr(1.5f, new Vector3(50, 5, 50));
+        attrs[0] = new UFOAttr(0.5f, new Vector3(50, 5, 50));
+        attrs[1] = new UFOAttr(1f, new Vector3(50, 5, 50));
         attrs[2] = new UFOAttr(2f, new Vector3(50, 5, 50));
-        attrs[3] = new UFOAttr(3f, new Vector3(50, 5, 50));
-        attrs[4] = new UFOAttr(5f, new Vector3(50, 5, 50));
+        attrs[3] = new UFOAttr(2.5f, new Vector3(50, 5, 50));
+        attrs[4] = new UFOAttr(3f, new Vector3(50, 5, 50));
     }
     public void levelUp()
     {

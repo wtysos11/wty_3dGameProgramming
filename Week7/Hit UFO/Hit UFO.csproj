@@ -248,6 +248,9 @@
     <Compile Include="Assets\Scripts\DifficultyManager.cs" />
     <Compile Include="Assets\Scripts\FirstCharacterController.cs" />
     <Compile Include="Assets\Scripts\FirstController.cs" />
+    <Compile Include="Assets\Scripts\PhysicsAction\ActionAdapter.cs" />
+    <Compile Include="Assets\Scripts\PhysicsAction\ActionAdapterInterface.cs" />
+    <Compile Include="Assets\Scripts\PhysicsAction\PhysicsActionManager.cs" />
     <Compile Include="Assets\Scripts\Score.cs" />
     <Compile Include="Assets\Scripts\Shoot.cs" />
     <Compile Include="Assets\Scripts\UFO\UFOAttr.cs" />

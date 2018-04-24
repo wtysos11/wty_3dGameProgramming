@@ -4,12 +4,12 @@ using UnityEngine;
 using Mygame;
 
 public class UserClick : UnityEngine.EventSystems.EventTrigger {
-    UFOActionManager actionManager;
+    ActionAdapter actionAdapter;
 
     private void Start()
     {
         FirstController firstController = Director.getInstance().currentSceneController as FirstController;
-        actionManager = firstController.actionManager;
+        actionAdapter = firstController.actionAdapter;
     }
 
     private void OnMouseDown()

@@ -9,23 +9,18 @@ public class UFOFactory : MonoBehaviour {
 
     GameObject originalUFO;//UFO原型
 
-    private static UFOFactory _instance;
-    public static UFOFactory getInstance()
-    {
-        if(_instance == null)
-        {
-            _instance = new UFOFactory();
-
-        }
-        return _instance;
-    }
-    protected UFOFactory()
+    public UFOFactory()
     {
         freeQueue = new Queue<UFOObject>();
         usingList = new List<UFOObject>();
 
+
+    }
+
+    private void Awake()
+    {
         originalUFO = Object.Instantiate(Resources.Load("ufo", typeof(GameObject))) as GameObject;
-        
+
         originalUFO.SetActive(false);
     }
 
@@ -37,6 +32,7 @@ public class UFOFactory : MonoBehaviour {
             GameObject newObj = GameObject.Instantiate(originalUFO);
             newUFO = new UFOObject(newObj);
             newUFO.ufo.transform.name = "ufo" + totalNumber;
+            newUFO.ufo.tag = "UFO";
             CollisionRev rev = newUFO.ufo.AddComponent<CollisionRev>();
             rev.ufo = newUFO;
             totalNumber++;
@@ -45,7 +41,7 @@ public class UFOFactory : MonoBehaviour {
         {
             newUFO = freeQueue.Dequeue();
         }
-
+        //Debug.Log("produce ufo's name:"+newUFO.ufo.transform.name);
         newUFO.setAttr(attr);
         usingList.Add(newUFO);
         newUFO.randomChange();
@@ -70,5 +66,13 @@ public class UFOFactory : MonoBehaviour {
     public List<UFOObject> getUsingList()
     {
         return usingList;
+    }
+
+    public void updateAll(ActionAdapter actionAdapter)
+    {
+        foreach(UFOObject ufoObject in usingList)
+        {
+            actionAdapter.ufoRandomMove(ufoObject);
+        }
     }
 }
