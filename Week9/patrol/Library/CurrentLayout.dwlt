@@ -139,7 +139,7 @@ MonoBehaviour:
   m_MinSize: {x: 713, y: 492}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 151
+  controlID: 154
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -575,33 +575,33 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Script
+    - Assets/Resources
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Script
+  - Assets/Resources
   m_LastFoldersGridSize: 16
   m_LastProjectPath: E:\code\homework_for2018\3dGameProgramming\Week9\patrol
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 0e2b0000
-    m_LastClickedID: 11022
-    m_ExpandedIDs: 00000000a427000016280000ac290000d82900000e2b00000a2d000000ca9a3bffffff7f
+    m_SelectedIDs: 14280000
+    m_LastClickedID: 10260
+    m_ExpandedIDs: 00000000ce27000042280000de2900000a2a00004e2b0000de2c0000562d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Resources
-      m_OriginalName: Resources
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 43216
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 12}
     m_SearchString: 
@@ -615,7 +615,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a4270000
+    m_ExpandedIDs: 00000000ce27000042280000de2900000a2a00004e2b0000562d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -646,15 +646,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: c62300001c260000a4250000e4310000722b0000a22b00005c2800008e2a00001229000030290000ae290000222b00003a2a0000702c00008e63fbff5e68fdff76280000462b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: FirstSceneController
-      m_OriginalName: FirstSceneController
+      m_Name: MonsterChaser
+      m_OriginalName: MonsterChaser
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 17322
+      m_UserData: 47356
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -775,14 +775,14 @@ MonoBehaviour:
     height: 708
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 16795.074169561805
+  lastFramingTime: 546.6541844477085
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 5.0005665, y: 0.58432376, z: 5}
+    m_Target: {x: 5.0000005, y: 0.7017735, z: 24}
     speed: 2
-    m_Value: {x: 5.0005665, y: 0.58432376, z: 5}
+    m_Value: {x: 5.0000005, y: 0.7017735, z: 24}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -810,9 +810,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_Size:
-    m_Target: 4.472703
+    m_Target: 9.835516
     speed: 2
-    m_Value: 4.472703
+    m_Value: 9.835516
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -853,9 +853,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: aa430000
+    m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ba55fdffc055fdfffadcfeffd4beffffdabeffff9efbffff00000000
+    m_ExpandedIDs: a0f8ffff82fbffff84fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

@@ -4,12 +4,12 @@ using UnityEngine;
 using Mygame;
 public class UserInterface : MonoBehaviour
 {
-    FirstController firstController;
+    FirstSceneController firstController;
     GUIStyle style;
     GUIStyle buttonStyle;
     private void Start()
     {
-        this.firstController = Director.getInstance().currentSceneController as FirstController;
+        this.firstController = Director.getInstance().currentSceneController as FirstSceneController;
 
         style = new GUIStyle();
         style.fontSize = 20;

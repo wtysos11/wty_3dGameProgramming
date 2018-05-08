@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mygame;
-
+using System;
 namespace Mygame
 {
     public enum BaseActionEventType : int { Started, Completed }
@@ -38,6 +38,7 @@ namespace Mygame
     {
         public Vector3 target;
         public float speed;
+        bool isRotate = false;
 
         //由Unity来创建动作类，保证内存正确回收
         public static LineAction GetBaseAction(Vector3 target, float speed)
@@ -50,21 +51,38 @@ namespace Mygame
 
         public override void Update()
         {
-            //Debug.Log(this.transform == null);
-            //Debug.Log("In Line Update");
-            //Debug.Log("aim position:"+this.transform.position.ToString());
-            //Debug.Log("target:"+target.ToString() + " speed:" + speed.ToString());
+            if(!isRotate)
+            {
+                Vector3 origin;
+                origin = this.transform.position;
+                double deltaX = target.x - origin.x;
+                double deltaZ = target.z - origin.z;
+                double tan = deltaX / deltaZ;
+                double arcTan = Math.Atan(tan);
+                double degree = 180 / Math.PI * arcTan;
+                if (degree <= 0)
+                {
+                    degree += 180;
+                }
+                if (target.x < origin.x)
+                {
+                    degree += 180;
+                }
+                this.transform.rotation = Quaternion.Euler(0, (float)degree, 0);
+                isRotate = true;
+            }
             this.transform.position = Vector3.MoveTowards(this.transform.position, target, speed * Time.deltaTime);
             if (this.transform.position == target)
             {
                 this.destroy = true;
                 this.callback.actionDone(this);
+                isRotate = false;
             }
         }
 
         public override void Start()
         {
-            //暂时不实现
+
         }
     }
 

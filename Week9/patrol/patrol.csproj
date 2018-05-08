@@ -240,6 +240,7 @@
     <Compile Include="Assets\Script\Base.cs" />
     <Compile Include="Assets\Script\Character\FirstCharacterController.cs" />
     <Compile Include="Assets\Script\Character\FirstView.cs" />
+    <Compile Include="Assets\Script\Factory\MonsterChaser.cs" />
     <Compile Include="Assets\Script\Factory\MonsterCollide.cs" />
     <Compile Include="Assets\Script\Factory\MonsterController.cs" />
     <Compile Include="Assets\Script\Factory\MonsterFactory.cs" />

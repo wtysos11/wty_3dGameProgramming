@@ -19,7 +19,7 @@ public class MonsterFactory : MonoBehaviour {
     private void Awake()
     {
         originalMonster = Object.Instantiate(Resources.Load("Monster", typeof(GameObject))) as GameObject;
-
+        originalMonster.transform.position = new Vector3(25, 0, 25);
         originalMonster.SetActive(false);
     }
 
@@ -30,11 +30,12 @@ public class MonsterFactory : MonoBehaviour {
         {
             GameObject newObj = GameObject.Instantiate(originalMonster);
             monster = new MonsterController(newObj);
-            monster.transform.name = "ufo" + totalNumber;
-            monster.tag = "monster";
+            monster.transform.name = "monster" + totalNumber;
             monster.id = totalNumber;
-            MonsterCollide rev = monster.gameObject.AddComponent<MonsterCollide>();
+            MonsterChaser chasing = monster.gameObject.AddComponent<MonsterChaser>();//追逐器
+            MonsterCollide rev = monster.gameObject.AddComponent<MonsterCollide>();//碰撞处理器
             rev.monster = monster;
+            rev.chaser = chasing;
             totalNumber++;
         }
         else
