@@ -6,6 +6,7 @@ public class FirstCharacterController : MonoBehaviour {
     public float rotateSpeed = 16.0F;
     public float runningSpeed = 10.0F;//running speed
     private Animator animator;
+
     private void Start()
     {
         animator = this.GetComponent<Animator>();
@@ -13,6 +14,11 @@ public class FirstCharacterController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        if(this.transform.position.y<-10)
+        {
+            Singleton<EventManager>.Instance.PlayerWin();
+        }
+
         float running = Input.GetAxis("Vertical") * runningSpeed;
         float rotate = Input.GetAxis("Horizontal") * rotateSpeed;
         if (running != 0 || rotate != 0)
@@ -31,6 +37,9 @@ public class FirstCharacterController : MonoBehaviour {
         transform.Translate(0, 0, running);
         transform.Rotate(0, rotate, 0);
         animator.SetFloat("Speed", running);
-    
+        
     }
+
+
+
 }

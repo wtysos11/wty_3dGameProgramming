@@ -66,5 +66,15 @@ public class MonsterFactory : MonoBehaviour {
     {
         return usingList;
     }
+
+    public void clearAll()
+    {
+        var stack = new Stack<MonsterController>(usingList);
+        while(stack.Count!=0)
+        {
+            MonsterController monster = stack.Pop();
+            this.recycle(monster);
+        }
+    }
     
 }
