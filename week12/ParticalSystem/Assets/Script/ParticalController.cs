@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class ParticalController : MonoBehaviour {
 
+    public delegate void ChangeWithWater(int total);
+    public static event ChangeWithWater OnChangeWithWater;
+
     ParticleSystem ps;
     float myMin = 1.0f;
     float myMax = 1000.0f;
     float myBase = 1000.0f;
+    public int totalPartical = 0;
     List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
-    List<ParticleSystem.Particle> exit = new List<ParticleSystem.Particle>();
-    List<ParticleSystem.Particle> inside = new List<ParticleSystem.Particle>();
-    List<ParticleSystem.Particle> outside = new List<ParticleSystem.Particle>();
 
     public GameObject XFTarget;
 
@@ -20,6 +21,7 @@ public class ParticalController : MonoBehaviour {
     void Start () {
         ps = GetComponent<ParticleSystem>();
         XFTarget = GameObject.FindGameObjectWithTag("flame");
+        ps.trigger.SetCollider(0,XFTarget.GetComponent<BoxCollider>());
 	}
 	
 	// Update is called once per frame
@@ -40,18 +42,9 @@ public class ParticalController : MonoBehaviour {
     void OnParticleTrigger()
     {
         int enterNum = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
-        int exitNum = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Exit, exit);
-        int insideNum = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Inside, inside);
-        int outsideNum = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Outside, outside);
 
-        Debug.Log("enter Num:" + enterNum);
-        Debug.Log("exit Num:" + exitNum);
-        Debug.Log("inside Num:" + insideNum);
-        Debug.Log("outside Num:" + outsideNum);
-
+        totalPartical += enterNum;
+        OnChangeWithWater(totalPartical);
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
-        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Exit, exit);
-        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, inside);
-        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Outside, outside);
     }
 }

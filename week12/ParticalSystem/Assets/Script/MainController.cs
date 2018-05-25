@@ -6,16 +6,31 @@ public class MainController : MonoBehaviour {
 
     GameObject fire;
     GameObject water;
-    GameObject fireTrigger;
+    ParticalController PC;
+    FlameController FC;
 	// Use this for initialization
 	void Start () {
         fire = GameObject.FindGameObjectWithTag("flame");
         water = GameObject.FindGameObjectWithTag("water");
-        fireTrigger = GameObject.FindGameObjectWithTag("fireTrigger");
+        PC = water.GetComponent<ParticalController>();
+        FC = fire.GetComponent<FlameController>();
+        myEnable();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void myEnable()
+    {
+        ParticalController.OnChangeWithWater += FC.changeWithWater;
+    }
+
+    private void myDisable()
+    {
+        ParticalController.OnChangeWithWater -= FC.changeWithWater;
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
+
+
 }

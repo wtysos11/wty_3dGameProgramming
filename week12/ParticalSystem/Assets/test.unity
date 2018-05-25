@@ -246,7 +246,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1264061836
+  randomSeed: 781615685
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3583,6 +3583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887ff8c76e9b43d4aac3cfb9904a0b7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ps: {fileID: 0}
 --- !u!1 &724918483
 GameObject:
   m_ObjectHideFlags: 0
@@ -3728,7 +3729,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1117205470
+  randomSeed: -688053547
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -6235,7 +6236,7 @@ ParticleSystem:
     collisionShape5: {fileID: 0}
     inside: 0
     outside: 0
-    enter: 0
+    enter: 2
     exit: 0
     radiusScale: 1
   SubModule:
@@ -7040,6 +7041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be530306ca2e4f043a07a23ada9d1224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalPartical: 0
   XFTarget: {fileID: 0}
 --- !u!1 &849406373
 GameObject:
@@ -7188,6 +7190,7 @@ GameObject:
   - component: {fileID: 1325912359}
   - component: {fileID: 1325912358}
   - component: {fileID: 1325912357}
+  - component: {fileID: 1325912361}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7258,6 +7261,17 @@ Transform:
   m_Father: {fileID: 1627241191}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1325912361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1325912356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1948361187a67408bb7cbf89edc5c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1627241190
 GameObject:
   m_ObjectHideFlags: 0

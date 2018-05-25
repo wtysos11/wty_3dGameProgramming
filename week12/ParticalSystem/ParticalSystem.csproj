@@ -239,6 +239,7 @@
     <Compile Include="Assets\Script\FlameController.cs" />
     <Compile Include="Assets\Script\MainController.cs" />
     <Compile Include="Assets\Script\ParticalController.cs" />
+    <Compile Include="Assets\Script\UserInterface.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
