@@ -26,10 +26,10 @@ namespace MyTween
         //回调函数
         private Action<MyTween> _onComplete;
 
-        public MyTween OnComplete(Action<MyTween> callback)
+        public Transform OnComplete(Action<MyTween> callback)
         {
-            this._onComplete += callback;
-            return this;
+            _onComplete += callback;
+            return transform;
         }
 
         //构造函数
@@ -57,6 +57,21 @@ namespace MyTween
                 _onComplete(this);
             }
             list.runOnComplete();
+        }
+
+        public void Play()
+        {
+            isPaused = false;
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+        }
+
+        public void Kill()
+        {
+            mono.StopCoroutine(coroutine);
         }
     }
 }

@@ -19,9 +19,27 @@ namespace MyTween
             currentTween = null;
         }
 
+        public MyTween getTween()
+        {
+            return currentTween;
+        }
+        
+
         private void runTween(MyTween tween)
         {
-            Coroutine coroutine = tween.mono.StartCoroutine(tween.mono._DoMove(tween));
+            Coroutine coroutine = null;
+            if(tween.name.Equals("DoMove"))
+            {
+                coroutine = tween.mono.StartCoroutine(tween.mono._DoMove(tween));
+            }
+            else if(tween.name.Equals("DoDelay"))
+            {
+                coroutine = tween.mono.StartCoroutine(tween.mono._DoDelay(tween));
+            }
+            else if(tween.name.Equals("DoScale"))
+            {
+                coroutine = tween.mono.StartCoroutine(tween.mono._DoScale(tween));
+            }
             tween.setCoroutine(coroutine);
         }
 
@@ -49,7 +67,6 @@ namespace MyTween
         }
         public void runOnComplete()
         {
-            Debug.Log("Complete one task in the list");
             //对已完成的tween进行处理
 
             //装载新的Tween
