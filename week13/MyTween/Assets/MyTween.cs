@@ -14,9 +14,11 @@ namespace MyTween
 
         //运动信息
         internal string name;
+        internal MonoBehaviour mono;
         internal Transform transform;
         internal Vector3 target;
         internal float duration;
+        internal TweenList list;
         //协程
         internal Coroutine coroutine;
         //状态
@@ -31,12 +33,14 @@ namespace MyTween
         }
 
         //构造函数
-        public MyTween(string name,Vector3 target,float duration,Transform transform,Coroutine coroutine)
+        public MyTween(string name,MonoBehaviour mono,Vector3 target,float duration,Transform transform,Coroutine coroutine)
         {
             this.name = name;
+            this.mono = mono;
             this.target = target;
             this.duration = duration;
             this.transform = transform;
+            this.list = transform.gameObject.GetComponent<TweenList>();
             this.coroutine = coroutine;
             isPaused = false;
         }
@@ -52,6 +56,7 @@ namespace MyTween
             {
                 _onComplete(this);
             }
+            list.runOnComplete();
         }
     }
 }

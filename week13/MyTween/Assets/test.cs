@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyTween;
 public class test : MonoBehaviour {
-    TweenList tweenList;
     private void Awake()
     {
-        tweenList = this.GetComponent<TweenList>();
+        transform.gameObject.AddComponent<TweenList>();
     }
     // Use this for initialization
     void Start () {

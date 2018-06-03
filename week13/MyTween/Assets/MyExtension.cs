@@ -9,6 +9,7 @@ namespace MyTween
         public static IEnumerator _DoMove(this MonoBehaviour mono,MyTween tween)
         {
             Debug.Log("enter implement _DoMove");
+
             Vector3 speed = (tween.target - tween.transform.position) / tween.duration;
             for(float f = tween.duration;f>=0.0f;f-=Time.deltaTime)
             {
@@ -26,10 +27,11 @@ namespace MyTween
         public static Transform DoMove(this Transform transform,Vector3 target,float duration)
         {
             Debug.Log("In function DoMove with target:"+target+" at time:"+Time.time);
+
             MonoBehaviour mono = transform.GetComponents<MonoBehaviour>()[0];
-            MyTween tween = new MyTween("DoMove", target, duration, transform,null);
-            Coroutine coroutine = mono.StartCoroutine(mono._DoMove(tween));
-            tween.setCoroutine(coroutine);
+            TweenList list = mono.transform.gameObject.GetComponent<TweenList>();
+            MyTween tween = new MyTween("DoMove",mono,target, duration, transform,null);
+            list.addTween(tween);
             return tween.transform;
         }
     }
