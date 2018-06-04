@@ -9,7 +9,7 @@
 [DOTween文档](http://dotween.demigiant.com/documentation.php#creatingTweener)
 
 ## 制作成品
-[演示视频]()
+[演示视频](https://www.bilibili.com/video/av24344582)
 
 测试代码
 ```C#
