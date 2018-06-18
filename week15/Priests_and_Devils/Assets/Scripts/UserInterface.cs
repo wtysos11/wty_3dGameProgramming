@@ -40,5 +40,12 @@ public class UserInterface : MonoBehaviour {
                 action.restart();
             }
         }
+        else
+        {
+            if (GUI.Button(new Rect(Screen.width / 2 - 70, Screen.height -300, 140, 70), "Next", buttonStyle))
+            {
+                action.next();
+            }
+        }
     }
 }

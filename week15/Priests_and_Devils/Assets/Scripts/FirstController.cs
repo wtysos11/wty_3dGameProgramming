@@ -11,6 +11,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     public CoastController toCoast;
     public BoatController boat;
     public ICharacterController[] characters;
+    public Hashtable stateTable;
     
     void Awake()
     {
@@ -18,11 +19,13 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         SSDirector director = SSDirector.getInstance();
         director.currentSceneController = this;
         userInterface = gameObject.AddComponent<UserInterface>() as UserInterface;
+        stateTable = new Hashtable();
         this.LoadResources();
     }
 
     public void LoadResources()
     {
+        
         GameObject water = Instantiate(Resources.Load("Prefabs/water",typeof(GameObject))) as GameObject;
         fromCoast = new CoastController(0,new Vector3(0,0,0));
         toCoast = new CoastController(1, new Vector3(12, 0, 0));
@@ -38,12 +41,72 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             characters[i] = new ICharacterController(i, "devil", new Vector3((float)2.5 - i, (float)1.25, 0));
         }
         fromCoast.initStorage(characters);
-        /*
-        Debug.Log("check whether:" + (fromCoast.storage.characterStorage[0] == fromCoast.storage.characterStorage[1]));
-        for(int i=0;i<6;i++)
+
+        //生成状态图
+        Debug.Log("Loading Resources");
+        Queue<Node> q = new Queue<Node>();
+        Node origin = new Node(3,3,1);//牧师3个，魔鬼3个，船在场，即开始状态
+        q.Enqueue(origin);
+        while(q.Count!=0)
         {
-            Debug.Log(fromCoast.storage.characterStorage[i].character.name);
-        }*/
+            Node node = q.Dequeue();
+
+            if (stateTable.Contains(node.getHash()))//检查重复
+            {
+                continue;
+            }
+
+            stateTable.Add(node.getHash(), node);
+            Debug.Log(node.getPr()+" "+ node.getDe()+" "+ node.getBoat());
+            int nowBoat;
+            if(node.getBoat()==0)
+            {
+                nowBoat = 1;
+            }
+            else
+            {
+                nowBoat = 0;
+            }
+            Node[] arr = new Node[6];
+
+            if(node.getBoat() == 1)//如果船在本岸，需要向对岸送人
+            {
+                arr[0] = new Node(node.getPr(), node.getDe() - 1, nowBoat);//d
+                arr[1] = new Node(node.getPr(), node.getDe() - 2, nowBoat);//dd
+                arr[2] = new Node(node.getPr() - 1, node.getDe() - 1, nowBoat);//dp
+                arr[3] = new Node(node.getPr() - 1, node.getDe(), nowBoat);//p
+                arr[4] = new Node(node.getPr() - 2, node.getDe(), nowBoat);//pp
+                arr[5] = new Node(node.getPr(), node.getDe(), nowBoat); // empty
+            }
+            else if(node.getBoat() == 0)//如果船在对岸，需要本岸接受
+            {
+                arr[0] = new Node(node.getPr(), node.getDe() + 1, nowBoat);//d
+                arr[1] = new Node(node.getPr(), node.getDe() + 2, nowBoat);//dd
+                arr[2] = new Node(node.getPr() + 1, node.getDe() + 1, nowBoat);//dp
+                arr[3] = new Node(node.getPr() + 1, node.getDe(), nowBoat);//p
+                arr[4] = new Node(node.getPr() + 2, node.getDe(), nowBoat);//pp
+                arr[5] = new Node(node.getPr(), node.getDe(), nowBoat); // empty
+            }
+
+        
+            for(int i=0;i<=5;i++)
+            {
+                var n = arr[i];
+                if(n.judgeLegal())
+                {
+                    //判断是否为空船
+                    if(n.getPr()==node.getPr()&&n.getDe()==node.getDe())
+                    {
+                        continue;
+                    }
+
+                    node.edge.Add(new Edge(node, n,i));
+                    q.Enqueue(n);
+                }
+            }
+
+        }
+        
     }
 
 
@@ -59,6 +122,220 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         }
         
     }
+
+    //自动进行下一步
+    public void next()
+    {
+        /** 目标：自动进行下一步
+         *  首先找到当前状态
+         *  以当前状态为初始点进行BFS，找到目标状态
+         *  需要记录的信息：是否已经查找到，以及父亲节点
+         *  找到目标以后进行反向，找到最开始的那条边，根据信息进行移动
+         * 
+         */
+        int priest_num = fromCoast.getPriestNum();
+        int devil_num = fromCoast.getDevilNum();
+        int boatNum;
+        if(boat.boatStatus==0)
+        {
+            boatNum = 1;
+            priest_num += boat.getPriestNum();
+            devil_num += boat.getDevilNum();
+        }
+        else
+        {
+            boatNum = 0;
+        }
+        int hashCode = Node.getHash(priest_num, devil_num, boatNum);
+        Node current = stateTable[hashCode] as Node;
+        Hashtable isVisit = new Hashtable();
+        Queue<Node> bfs = new Queue<Node>();
+        int endState = Node.getHash(0, 0, 0);
+
+
+        bfs.Enqueue(current);
+        while(bfs.Count!=0)
+        {
+            Node cur = bfs.Dequeue();
+            if(cur.getHash()==endState)
+            {
+                break;
+            }
+            
+            foreach(Edge e in cur.edge)
+            {
+                if(!isVisit.Contains(e.to.getHash()))
+                {
+                    Node aim = stateTable[e.to.getHash()] as Node;
+                    aim.parent = cur.getHash();
+                    isVisit.Add(aim.getHash(), aim);
+                    bfs.Enqueue(aim);
+                }
+            }
+        }
+
+        //寻找正确的路径
+        Node end = stateTable[endState] as Node;
+        int pState = end.parent;
+        while(pState!=hashCode)
+        {
+            end = stateTable[pState] as Node;
+            pState = end.parent;
+        }
+
+        int way = 5;
+        foreach(Edge e in current.edge)
+        {
+            if(e.to.getHash() == end.getHash())
+            {
+                way = e.state;
+                break;
+            }
+        }
+        //0 d 1 dd 2 dp 3 p 4 pp 5 empty
+        boat.allOnCoast();
+        CoastController whichCoast;
+        if(boat.boatStatus==0)
+        {
+            whichCoast = fromCoast;
+        }
+        else
+        {
+            whichCoast = toCoast;
+        }
+
+        var storage = whichCoast.storage.characterStorage;
+        switch(way)
+        {
+            case 0:
+                ICharacterController one=null;
+                foreach(var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("devil"))
+                    {
+                        one = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(one);
+                break;
+            case 1:
+                ICharacterController one2 = null;
+                foreach (var characters in storage)
+                {
+                    if(characters==null)
+                    {
+                        continue;
+                    }
+
+                    if (characters.race.Equals("devil"))
+                    {
+                        one2 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(one2);
+                ICharacterController two2 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("devil"))
+                    {
+                        two2 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(two2);
+                break;
+            case 2:
+                ICharacterController one3 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("devil"))
+                    {
+                        one3 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(one3);
+                ICharacterController two3 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("priest"))
+                    {
+                        two3 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(two3);
+                break;
+            case 3:
+                ICharacterController one4 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("priest"))
+                    {
+                        one4 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(one4);
+                break;
+            case 4:
+                ICharacterController one5 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("priest"))
+                    {
+                        one5 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(one5);
+                ICharacterController two5 = null;
+                foreach (var characters in storage)
+                {
+                    if (characters == null)
+                    {
+                        continue;
+                    }
+                    if (characters.race.Equals("priest"))
+                    {
+                        two5 = characters;
+                        break;
+                    }
+                }
+                this.clickCharacter(two5);
+                break;
+            case 5:
+                break;
+        }
+        this.moveBoat();
+    }
+
     public void moveBoat()
     {
         if (userInterface.status != 0)

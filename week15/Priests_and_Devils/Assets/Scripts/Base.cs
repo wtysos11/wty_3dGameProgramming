@@ -34,6 +34,7 @@ namespace Mygame
         void restart();
         void moveBoat();
         void clickCharacter(ICharacterController charctrl);
+        void next();
     }
 
     //移动控制器
@@ -159,7 +160,7 @@ namespace Mygame
             {
                 if (characterStorage[i] == null)
                     continue;
-                else if(characterStorage[i].race == "priest")
+                else if(characterStorage[i].race.Equals("priest"))
                 {
                     priest_num++;
                 }
@@ -170,7 +171,7 @@ namespace Mygame
             }
             if(boat.frontCharacter!=null)
             {
-                if(boat.frontCharacter.race == "priest")
+                if(boat.frontCharacter.race.Equals("priest"))
                 {
                     priest_num++;
                 }
@@ -181,7 +182,7 @@ namespace Mygame
             }
             if(boat.backCharacter!=null)
             {
-                if (boat.backCharacter.race == "priest")
+                if (boat.backCharacter.race.Equals("priest"))
                 {
                     priest_num++;
                 }
@@ -203,7 +204,7 @@ namespace Mygame
             {
                 if (characterStorage[i] == null)
                     continue;
-                else if (characterStorage[i].race == "priest")
+                else if (characterStorage[i].race.Equals("priest"))
                 {
                     priest_num++;
                 }
@@ -217,6 +218,43 @@ namespace Mygame
                 return true;
             else
                 return false;
+        }
+        public int getPriestNum()
+        {
+            int priest_num = 0, devil_num = 0;
+            for (int i = 0; i < characterStorage.Length; i++)
+            {
+                if (characterStorage[i] == null)
+                    continue;
+                else if (characterStorage[i].race.Equals("priest"))
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            return priest_num;
+        }
+
+        public int getDevilNum()
+        {
+            int priest_num = 0, devil_num = 0;
+            for (int i = 0; i < characterStorage.Length; i++)
+            {
+                if (characterStorage[i] == null)
+                    continue;
+                else if (characterStorage[i].race.Equals("priest"))
+                {
+                    priest_num++;
+                }
+                else
+                {
+                    devil_num++;
+                }
+            }
+            return devil_num;
         }
     }
 
@@ -302,6 +340,15 @@ namespace Mygame
         public bool check_win()
         {
             return storage.isFull();
+        }
+
+        public int getPriestNum()
+        {
+            return storage.getPriestNum();
+        }
+        public int getDevilNum()
+        {
+            return storage.getDevilNum();
         }
     }
 
@@ -422,7 +469,56 @@ namespace Mygame
             frontCharacter = null;
             backCharacter = null;
         }
-        
+        public int getPriestNum()
+        {
+            int pri_num = 0;
+            if(frontCharacter!=null)
+            {
+                if(frontCharacter.race.Equals("priest"))
+                {
+                    pri_num++;
+                }
+            }
+            if (backCharacter != null)
+            {
+                if (backCharacter.race.Equals("priest"))
+                {
+                    pri_num++;
+                }
+            }
+            return pri_num;
+        }
+        public int getDevilNum()
+        {
+            int de_num = 0;
+            if (frontCharacter != null)
+            {
+                if (frontCharacter.race.Equals("devil"))
+                {
+                    de_num++;
+                }
+            }
+            if (backCharacter != null)
+            {
+                if (backCharacter.race.Equals("devil"))
+                {
+                    de_num++;
+                }
+            }
+            return de_num;
+        }
+        public void allOnCoast()
+        {
+            FirstController firstController = SSDirector.getInstance().currentSceneController as FirstController;
+            if(frontCharacter!=null)
+            {
+                firstController.clickCharacter(frontCharacter);
+            }
+            if(backCharacter!=null)
+            {
+                firstController.clickCharacter(backCharacter);
+            }
+        }
     }
 
     //人物控制器
