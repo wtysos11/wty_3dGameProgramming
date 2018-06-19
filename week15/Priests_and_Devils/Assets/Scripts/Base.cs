@@ -386,12 +386,14 @@ namespace Mygame
             if (boatStatus == 0)
             {
                 boatStatus = 1;
-                movescript.Move(new Vector3(8, 0, 0));
+                //movescript.Move(new Vector3(8, 0, 0));
+                boat.transform.position = new Vector3(8, 0, 0);
             }
             else
             {
                 boatStatus = 0;
-                movescript.Move(new Vector3(4, 0, 0));
+                //movescript.Move(new Vector3(4, 0, 0));
+                boat.transform.position = new Vector3(4, 0, 0);
             }
         }
         public bool boatFull()
@@ -465,7 +467,8 @@ namespace Mygame
         public void reset()
         {
             boatStatus = 0;
-            movescript.Move(new Vector3(4, 0, 0));
+            //movescript.Move(new Vector3(4, 0, 0));
+            boat.transform.position = new Vector3(4, 0, 0);
             frontCharacter = null;
             backCharacter = null;
         }
@@ -558,15 +561,16 @@ namespace Mygame
             onBoat = true;
             if(boatStatus == 0)
             {
-                movescript.Move(frontmiddle1);
-                movescript.Move(frontmiddle2);
+                //movescript.Move(frontmiddle1);
+                //movescript.Move(frontmiddle2);
             }
             else
             {
-                movescript.Move(backmiddle1);
-                movescript.Move(backmiddle2);
+                //movescript.Move(backmiddle1);
+                //movescript.Move(backmiddle2);
             }
-            movescript.Move(pos + relativeMove);
+            //movescript.Move(pos + relativeMove);
+            character.transform.position = pos + relativeMove;
 
 
         }
@@ -576,17 +580,18 @@ namespace Mygame
             onBoat = false;
             if(boatStatus == 0)
             {
-                movescript.Move(frontmiddle2);
-                movescript.Move(frontmiddle1);
+                //movescript.Move(frontmiddle2);
+                //movescript.Move(frontmiddle1);
                 place = "from";
             }
             else
             {
-                movescript.Move(backmiddle2);
-                movescript.Move(backmiddle1);
+                //movescript.Move(backmiddle2);
+                //movescript.Move(backmiddle1);
                 place = "to";
             }
-            movescript.Move(pos+relativeMove);
+            //movescript.Move(pos+relativeMove);
+            character.transform.position = pos + relativeMove;
         }
         public void reset()
         {

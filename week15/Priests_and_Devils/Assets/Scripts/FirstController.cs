@@ -43,7 +43,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         fromCoast.initStorage(characters);
 
         //生成状态图
-        Debug.Log("Loading Resources");
+        //Debug.Log("Loading Resources");
         Queue<Node> q = new Queue<Node>();
         Node origin = new Node(3,3,1);//牧师3个，魔鬼3个，船在场，即开始状态
         q.Enqueue(origin);
@@ -57,7 +57,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             }
 
             stateTable.Add(node.getHash(), node);
-            Debug.Log(node.getPr()+" "+ node.getDe()+" "+ node.getBoat());
+            //Debug.Log(node.getPr()+" "+ node.getDe()+" "+ node.getBoat());
             int nowBoat;
             if(node.getBoat()==0)
             {
@@ -334,6 +334,8 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
                 break;
         }
         this.moveBoat();
+        boat.allOnCoast();
+        checkGameOver();
     }
 
     public void moveBoat()
@@ -401,7 +403,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         }
         
         int flag = checkGameOver();
-        Debug.Log("check game over:" + flag);
+        //Debug.Log("check game over:" + flag);
         if(flag == 1)
         {
             userInterface.status = 2;
@@ -415,7 +417,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
     //gameover时返回-1,胜利时返回1
     public int checkGameOver()
     {
-        Debug.Log("check for game over");
+        //Debug.Log("check for game over");
 
         if(boat.boatStatus == 0)
         {
@@ -426,7 +428,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
         }
         else
         {
-            Debug.Log("to coast check");
+            //Debug.Log("to coast check");
             if(fromCoast.check_over()||toCoast.check_over(boat))
             {
                 return -1;
