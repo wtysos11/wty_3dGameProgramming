@@ -67,7 +67,7 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
             {
                 nowBoat = 0;
             }
-            Node[] arr = new Node[6];
+            Node[] arr = new Node[5];
 
             if(node.getBoat() == 1)//如果船在本岸，需要向对岸送人
             {
@@ -76,7 +76,6 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
                 arr[2] = new Node(node.getPr() - 1, node.getDe() - 1, nowBoat);//dp
                 arr[3] = new Node(node.getPr() - 1, node.getDe(), nowBoat);//p
                 arr[4] = new Node(node.getPr() - 2, node.getDe(), nowBoat);//pp
-                arr[5] = new Node(node.getPr(), node.getDe(), nowBoat); // empty
             }
             else if(node.getBoat() == 0)//如果船在对岸，需要本岸接受
             {
@@ -85,11 +84,10 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
                 arr[2] = new Node(node.getPr() + 1, node.getDe() + 1, nowBoat);//dp
                 arr[3] = new Node(node.getPr() + 1, node.getDe(), nowBoat);//p
                 arr[4] = new Node(node.getPr() + 2, node.getDe(), nowBoat);//pp
-                arr[5] = new Node(node.getPr(), node.getDe(), nowBoat); // empty
             }
 
         
-            for(int i=0;i<=5;i++)
+            for(int i=0;i<5;i++)
             {
                 var n = arr[i];
                 if(n.judgeLegal())
@@ -329,8 +327,6 @@ public class FirstController : MonoBehaviour, ISceneController, IUserAction
                     }
                 }
                 this.clickCharacter(two5);
-                break;
-            case 5:
                 break;
         }
         this.moveBoat();
